@@ -28,6 +28,8 @@ class User {
 
     var role: String? = null// visitor | admin
 
+    var srcPhoto: String? = null
+
 
     fun generatePassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt())
@@ -36,5 +38,10 @@ class User {
 
     fun compare(password: String, hash: String): Boolean {
         return BCrypt.checkpw(password, hash)
+    }
+
+    override fun toString(): String {
+        super.toString()
+        return "$id + ' ' + $name+ ' ' +$username"
     }
 }

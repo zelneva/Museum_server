@@ -8,4 +8,5 @@ class UserRequest {
     var username: String? = null
     var password: String? = null
     var role: String? = null
+    var srcPhoto: String? = null
 }
