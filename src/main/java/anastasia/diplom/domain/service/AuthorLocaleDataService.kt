@@ -57,14 +57,6 @@ open class AuthorLocaleDataService {
 
 
     //return list all of data about author by id
-    fun findDataById(authorId: UUID): List<AuthorLocaleData> {
-        val dataListByAuthorId = mutableListOf<AuthorLocaleData>()
-        for (l in authorLocaleDataRepository.findAll()) {
-            if (l.author!!.id == authorId) {
-                dataListByAuthorId.add(l)
-            }
-        }
-        return dataListByAuthorId
-    }
+    fun findDataById(authorId: UUID) = authorLocaleDataRepository.findByAuthorId(authorId)
 
 }

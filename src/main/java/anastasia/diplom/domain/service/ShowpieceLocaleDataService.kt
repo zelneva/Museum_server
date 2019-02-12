@@ -55,13 +55,5 @@ open class ShowpieceLocaleDataService {
 
 
     //return list all of data about showpiece by id
-    fun findDataById(showpieceId: UUID): List<ShowpieceLocaleData>{
-        var dataListByShowpieceId = mutableListOf<ShowpieceLocaleData>()
-        for (i in showpieceLocaleDataRepository.findAll()){
-            if(i.showpiece!!.id  == showpieceId){
-                dataListByShowpieceId.add(i)
-            }
-        }
-        return dataListByShowpieceId
-    }
+    fun findDataById(showpieceId: UUID) = showpieceLocaleDataRepository.findByShowpieceId(showpieceId)
 }

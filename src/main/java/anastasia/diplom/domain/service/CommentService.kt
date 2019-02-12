@@ -64,13 +64,5 @@ open class CommentService {
     }
 
 
-    fun findAllByShowpieceId(showpieceId: UUID): List<Comment> {
-        val dataListByShowpieceId = mutableListOf<Comment>()
-        for (l in commentRepository.findAll()) {
-            if (l.showpiece!!.id == showpieceId) {
-                dataListByShowpieceId.add(l)
-            }
-        }
-        return dataListByShowpieceId.sortedBy { it.date }
-    }
+    fun findAllByShowpieceId(showpieceId: UUID) = commentRepository.findByShowpieceId(showpieceId).sortedBy { it.date }
 }

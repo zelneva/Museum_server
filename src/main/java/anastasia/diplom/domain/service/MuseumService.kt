@@ -62,6 +62,4 @@ open class MuseumService {
 
     fun findByName(name: String) = museumRepository.findByName(name)
 
-    fun findByNameStartingWith(name: String) = museumRepository.findByNameIgnoreCaseStartingWith(name)
-
 }

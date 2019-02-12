@@ -53,6 +53,5 @@ open class ExhibitionService {
 
     fun findAll() = exhibitionRepository.findAll()
 
-//    fun findAllBySort() = exhibitionRepository!!.findAllByOrderByStartsAt()
 
 }
