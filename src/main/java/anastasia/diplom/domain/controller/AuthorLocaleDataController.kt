@@ -1,4 +1,4 @@
-package anastasia.diplom.domain.resource
+package anastasia.diplom.domain.controller
 
 import anastasia.diplom.domain.models.AuthorLocaleData
 import anastasia.diplom.domain.service.AuthorLocaleDataService
@@ -16,7 +16,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/locale/author")
 @Api(tags = arrayOf("author"), description = "Author locale data API")
-class AuthorLocaleDataResource (service: AuthorLocaleDataService){
+class AuthorLocaleDataController (service: AuthorLocaleDataService){
 
     @Autowired
     val authorLocaleDataService = service

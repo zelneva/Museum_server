@@ -1,4 +1,4 @@
-package anastasia.diplom.domain.resource
+package anastasia.diplom.domain.controller
 
 import anastasia.diplom.domain.models.Showpiece
 import anastasia.diplom.domain.service.ShowpieceService
@@ -16,7 +16,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/showpiece")
 @Api(tags = arrayOf("showpiece"), description = "Showpiece API")
-class ShowpieceResource(service: ShowpieceService) {
+class ShowpieceController(service: ShowpieceService) {
 
     @Autowired
     var showpieceService = service

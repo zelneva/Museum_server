@@ -9,6 +9,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 
 @Configuration
 open class AppConfig {
+
     @Bean
     open fun jedisConnectionFactory(): JedisConnectionFactory {
         return JedisConnectionFactory()

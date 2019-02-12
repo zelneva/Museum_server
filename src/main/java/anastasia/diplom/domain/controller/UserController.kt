@@ -1,4 +1,4 @@
-package anastasia.diplom.domain.resource
+package anastasia.diplom.domain.controller
 
 import anastasia.diplom.domain.models.SessionObject
 import anastasia.diplom.domain.service.UserService
@@ -16,14 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession
 import org.springframework.web.bind.annotation.PostMapping
 import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpSession
 
 
 @RestController
 @RequestMapping("/api/user")
 @EnableRedisHttpSession
-@Api(tags = arrayOf("user"), description = "User API")
-open class UserResource(service: UserService) {
+@Api(tags = ["user"], description = "User API")
+open class UserController(service: UserService) {
 
     @Autowired
     var userService = service
@@ -34,8 +33,10 @@ open class UserResource(service: UserService) {
             ApiResponse(code = 201, message = "User created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun register(user: UserRequest): ResponseEntity<Unit> {
-        return ResponseEntity(userService.create(user), HttpStatus.CREATED)
+    fun register(@RequestParam(value = "username", required = false) username: String,
+    @RequestParam(value = "password", required = false) password: String,
+                 @RequestParam(value = "name", required = false) name: String): ResponseEntity<Unit> {
+        return ResponseEntity(userService.create(username, password, name), HttpStatus.CREATED)
     }
 
 
@@ -45,17 +46,15 @@ open class UserResource(service: UserService) {
             ApiResponse(code = 201, message = "User login successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun signIn(@RequestParam(value = "username", required = false) username: String,
+    fun login(@RequestParam(value = "username", required = false) username: String,
                @RequestParam(value = "password", required = false) password: String,
                req: HttpServletRequest): ResponseEntity<SessionObject> {
-        val session: HttpSession = req.session
-
         if (username.trim() == "" || password.trim() == "") {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         } else if (!userService.check(username, password)) {
             return ResponseEntity(HttpStatus.NOT_FOUND)
         }else{
-            val sessionObj = SessionObject(session.id, userService.getIdByUsername(username.trim()))
+            val sessionObj = SessionObject(req.session.id, userService.getIdByUsername(username.trim()))
             userService.addSessionRedis(sessionObj.sessionId, username)
             return ResponseEntity(sessionObj, HttpStatus.CREATED)
         }
@@ -80,8 +79,10 @@ open class UserResource(service: UserService) {
             ApiResponse(code = 200, message = "User removed successfully"),
             ApiResponse(code = 404, message = "User not found")
     )
-    fun delete(@PathVariable("id") id: UUID) =
-            ResponseEntity(userService.delete(id), HttpStatus.OK)
+    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest) {
+        userService.deleteSessionRedis(req.requestedSessionId)
+        ResponseEntity(userService.delete(id), HttpStatus.OK)
+    }
 
 
     @PutMapping("/{id}")

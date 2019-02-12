@@ -1,4 +1,4 @@
-package anastasia.diplom.domain.resource
+package anastasia.diplom.domain.controller
 
 import anastasia.diplom.domain.models.Museum
 import anastasia.diplom.domain.service.MuseumService
@@ -16,7 +16,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/museum")
 @Api(tags = arrayOf("museum"), description = "Museum API")
-class MuseumResource(service: MuseumService) {
+class MuseumController(service: MuseumService) {
 
     @Autowired
     val museumService = service

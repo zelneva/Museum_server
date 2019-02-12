@@ -1,9 +1,7 @@
-package anastasia.diplom.domain.resource
+package anastasia.diplom.domain.controller
 
-import anastasia.diplom.domain.models.Showpiece
 import anastasia.diplom.domain.models.ShowpieceLocaleData
 import anastasia.diplom.domain.service.ShowpieceLocaleDataService
-import anastasia.diplom.domain.vo.AuthorLocaleDataRequest
 import anastasia.diplom.domain.vo.ShowpieceLocaleDataRequest
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -18,7 +16,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/locale/showpiece")
 @Api(tags = arrayOf("showpiece"), description = "Showpiece locale data API")
-class ShowpieceLocaleDataResource(service: ShowpieceLocaleDataService) {
+class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
 
     @Autowired
     val showpieceLocaleDataService = service

@@ -1,9 +1,7 @@
-package anastasia.diplom.domain.resource
+package anastasia.diplom.domain.controller
 
 import anastasia.diplom.domain.service.ExhibitionService
 import anastasia.diplom.domain.vo.ExhibitionRequest
-import anastasia.diplom.domain.vo.MuseumRequest
-import com.sun.jdi.request.ExceptionRequest
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -12,13 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import java.lang.Exception
 import java.util.*
 
 @RestController
 @RequestMapping("/api/exhibition")
 @Api(tags = arrayOf("exhibition"), description = "Exhibition API")
-class ExhibitionResource(service: ExhibitionService) {
+class ExhibitionController(service: ExhibitionService) {
 
     @Autowired
     val exhibitionService = service

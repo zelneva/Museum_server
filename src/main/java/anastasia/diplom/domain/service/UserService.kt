@@ -1,7 +1,5 @@
 package anastasia.diplom.domain.service
 
-import anastasia.diplom.domain.exception.MuseumNotFoundException
-import anastasia.diplom.domain.exception.UserNotFoundException
 import anastasia.diplom.domain.models.User
 import anastasia.diplom.domain.repository.UserRepository
 import anastasia.diplom.domain.vo.UserRequest
@@ -10,13 +8,6 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.boot.json.JacksonJsonParser
-import org.codehaus.groovy.ast.tools.GeneralUtils.params
-import org.springframework.http.RequestEntity.post
-import org.springframework.http.ResponseEntity.status
-import org.springframework.util.LinkedMultiValueMap
-import org.springframework.util.MultiValueMap
-import java.net.URI
 
 
 @Service
@@ -36,15 +27,16 @@ open class UserService {
 
 
     @Transactional
-    open fun create(userRequest: UserRequest) {
+    open fun create(username: String, password: String, name:String) {
         val user = User()
-        user.name = userRequest.name!!.trim()
-        user.password = user.generatePassword(userRequest.password!!).trim()
+        user.name = name.trim()
+        user.password = user.generatePassword(password).trim()
         user.role = "visitor"
-        user.username = userRequest.username!!.trim()
-        user.srcPhoto = userRequest.srcPhoto
+        user.username = username.trim()
+        user.srcPhoto = ""
         userRepository.save(user)
     }
+
 
 
     @Transactional
@@ -55,7 +47,6 @@ open class UserService {
         user.password = userRequest.password ?: user.password
         user.srcPhoto = userRequest.srcPhoto ?: user.srcPhoto
         return userRepository.save(user)
-
     }
 
 

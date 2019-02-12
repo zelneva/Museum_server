@@ -25,5 +25,4 @@ class ShowpieceLocaleData {
     var name: String? = null
 
     var description: String? = null
-
 }

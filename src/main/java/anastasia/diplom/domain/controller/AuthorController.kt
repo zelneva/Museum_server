@@ -1,4 +1,4 @@
-package anastasia.diplom.domain.resource
+package anastasia.diplom.domain.controller
 
 import anastasia.diplom.domain.service.AuthorService
 import anastasia.diplom.domain.vo.AuthorRequest
@@ -16,7 +16,7 @@ import java.util.*
 @RestController
 @RequestMapping("/api/author")
 @Api(tags = arrayOf("author"), description = "Author API")
-class AuthorResource (service: AuthorService){
+class AuthorController (service: AuthorService){
 
     @Autowired
     val authorService = service
