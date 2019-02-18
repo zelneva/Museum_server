@@ -14,11 +14,13 @@ open class AuthorService {
 
     companion object {
         lateinit var authorRepository: AuthorRepository
+        lateinit var userService: UserService
     }
 
     @Autowired
-    constructor(repository: AuthorRepository){
+    constructor(repository: AuthorRepository,userServ: UserService){
         authorRepository = repository
+        userService = userServ
     }
 
 
@@ -50,4 +52,6 @@ open class AuthorService {
 
 
     fun findAll() = authorRepository.findAll()
+
+
 }

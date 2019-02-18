@@ -53,10 +53,10 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
             ApiResponse(code = 400, message = "Invalid request")
     )
     fun create(showpieceLocaleDataRequest: ShowpieceLocaleDataRequest, req: HttpServletRequest): ResponseEntity<Unit> {
-        if (showpieceLocaleDataService.isAdmin(req.session.id)) {
-            return ResponseEntity(showpieceLocaleDataService.create(showpieceLocaleDataRequest), HttpStatus.CREATED)
+        return if (showpieceLocaleDataService.isAdmin(req.session.id)) {
+            ResponseEntity(showpieceLocaleDataService.create(showpieceLocaleDataRequest), HttpStatus.CREATED)
         } else {
-            return ResponseEntity(HttpStatus.BAD_REQUEST)
+            ResponseEntity(HttpStatus.BAD_REQUEST)
         }
     }
 
@@ -69,10 +69,10 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
             ApiResponse(code = 404, message = "Showpiece locale data not found")
     )
     fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
-        if (showpieceLocaleDataService.isAdmin(req.session.id)) {
-            return ResponseEntity(showpieceLocaleDataService.delete(id), HttpStatus.OK)
+        return if (showpieceLocaleDataService.isAdmin(req.session.id)) {
+            ResponseEntity(showpieceLocaleDataService.delete(id), HttpStatus.OK)
         } else {
-            return ResponseEntity(HttpStatus.BAD_REQUEST)
+            ResponseEntity(HttpStatus.BAD_REQUEST)
         }
     }
 
@@ -86,10 +86,10 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
     )
     fun update(@PathVariable("id") id: UUID, showpieceLocaleDataRequest: ShowpieceLocaleDataRequest,
                req: HttpServletRequest): ResponseEntity<ShowpieceLocaleData> {
-        if (showpieceLocaleDataService.isAdmin(req.session.id)) {
-            return ResponseEntity(showpieceLocaleDataService.update(id, showpieceLocaleDataRequest), HttpStatus.OK)
+        return if (showpieceLocaleDataService.isAdmin(req.session.id)) {
+            ResponseEntity(showpieceLocaleDataService.update(id, showpieceLocaleDataRequest), HttpStatus.OK)
         } else {
-            return ResponseEntity(HttpStatus.BAD_REQUEST)
+            ResponseEntity(HttpStatus.BAD_REQUEST)
         }
     }
 

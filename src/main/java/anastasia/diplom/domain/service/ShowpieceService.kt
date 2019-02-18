@@ -10,17 +10,15 @@ import java.util.*
 
 @Service
 @Transactional(readOnly = true)
-open class ShowpieceService {
+open class ShowpieceService: AbstractService {
 
     companion object {
         lateinit var showpieceRepository: ShowpieceRepository
-        lateinit var userService: UserService
     }
 
     @Autowired
-    constructor(repository: ShowpieceRepository, userServ: UserService) {
+    constructor(repository: ShowpieceRepository, userService: UserService) : super(userService) {
         showpieceRepository = repository
-        userService = userServ
     }
 
 
@@ -56,16 +54,4 @@ open class ShowpieceService {
     fun findOne(id: UUID) = showpieceRepository.findOne(id)
 
     fun findAll() = showpieceRepository.findAll()
-
-
-    fun isAdmin(sessionId: String): Boolean {
-        if (userService.checkUserInRedis(sessionId)) {
-            val userId = userService.getUserIdFromSessionId(sessionId)
-            val user = UserService.userRepository.findOne(UUID.fromString(userId))
-            if (user.role == "admin") {
-                return true
-            }
-        }
-        return false
-    }
 }
