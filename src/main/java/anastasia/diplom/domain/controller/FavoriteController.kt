@@ -30,9 +30,13 @@ class FavoriteController(service: FavoriteService) {
             ApiResponse(code = 201, message = "Favorite created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(favoriteRequest: FavoriteRequest, req: HttpServletRequest)
-            = ResponseEntity(favoriteService.create(favoriteRequest, req.session.id ), HttpStatus.CREATED)
-
+    fun create(@RequestParam(value = "showpiece", required = false) showpieceId: String,
+               req: HttpServletRequest): ResponseEntity<Unit> {
+        if (favoriteService.isUserLogin(req.session.id)) {
+            return ResponseEntity(favoriteService.create(showpieceId, req.session.id), HttpStatus.CREATED)
+        } else
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 
     @DeleteMapping("/{id}")
@@ -42,8 +46,13 @@ class FavoriteController(service: FavoriteService) {
             ApiResponse(code = 200, message = "Favorite removed successfully"),
             ApiResponse(code = 404, message = "Favorite not found")
     )
-    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest) =
-            ResponseEntity(favoriteService.delete(id, req.session.id), HttpStatus.OK)
+    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
+        if (favoriteService.isUserLogin(req.session.id)) {
+            return ResponseEntity(favoriteService.delete(id, req.session.id), HttpStatus.OK)
+        } else
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
+
 
 
     @GetMapping

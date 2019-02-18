@@ -70,6 +70,4 @@ class ExhibitionController(service: ExhibitionService) {
     fun updateExhibition(@PathVariable("id") id: UUID, exhibitionRequest: ExhibitionRequest)
             = ResponseEntity(exhibitionService.update(id, exhibitionRequest), HttpStatus.OK)
 
-
-
 }

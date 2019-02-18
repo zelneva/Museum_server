@@ -1,8 +1,6 @@
 package anastasia.diplom.domain.controller
 
 import anastasia.diplom.domain.service.CommentService
-import anastasia.diplom.domain.vo.CommentRequest
-import anastasia.diplom.domain.vo.ExhibitionRequest
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiResponse
@@ -29,8 +27,16 @@ class CommentController(service: CommentService) {
             ApiResponse(code = 201, message = "Comment created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(commentRequest: CommentRequest, req: HttpServletRequest)
-            = ResponseEntity(commentService.create(commentRequest, req.session.id ), HttpStatus.CREATED)
+    fun create(@RequestParam(value = "showpiece", required = false) showpieceId: String,
+               @RequestParam(value = "text", required = false) text: String,
+               req: HttpServletRequest): ResponseEntity<Unit> {
+        val date = Date()
+        if (commentService.isUserLogin(req.session.id)) {
+            return ResponseEntity(commentService.create(showpieceId, text, date, req.session.id), HttpStatus.CREATED)
+        } else {
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
 
 
     @DeleteMapping("/{id}")
@@ -40,8 +46,13 @@ class CommentController(service: CommentService) {
             ApiResponse(code = 200, message = "Comment removed successfully"),
             ApiResponse(code = 404, message = "Comment not found")
     )
-    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest) =
-            ResponseEntity(commentService.delete(id, req.session.id), HttpStatus.OK)
+    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
+        if (commentService.isUserLogin(req.session.id)) {
+            return ResponseEntity(commentService.delete(id, req.session.id), HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
 
 
     @PutMapping("/{id}")
@@ -51,8 +62,13 @@ class CommentController(service: CommentService) {
             ApiResponse(code = 404, message = "Comment not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, commentRequest: CommentRequest, req: HttpServletRequest)
-            = ResponseEntity(commentService.update(id, commentRequest, req.session.id), HttpStatus.OK)
+    fun update(@PathVariable("id") id: UUID, text: String, req: HttpServletRequest): ResponseEntity<Unit> {
+        if (commentService.isUserLogin(req.session.id)) {
+            return ResponseEntity(commentService.update(id, text, Date(), req.session.id), HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
 
 
     @GetMapping
@@ -61,7 +77,5 @@ class CommentController(service: CommentService) {
             ApiResponse(code = 200, message = "List comment found"),
             ApiResponse(code = 404, message = "List comment not found")
     )
-    fun findListCommentByExhibitionId(@RequestParam("exhibition_id") exhibitionId: UUID)
-            = ResponseEntity.ok(commentService.findAllByShowpieceId(exhibitionId))
-
+    fun findListCommentByExhibitionId(@RequestParam("exhibition_id") exhibitionId: UUID) = ResponseEntity.ok(commentService.findAllByShowpieceId(exhibitionId))
 }

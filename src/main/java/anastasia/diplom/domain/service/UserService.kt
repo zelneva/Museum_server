@@ -80,4 +80,8 @@ open class UserService {
     fun deleteSessionRedis(session: String){
         redisTemplate.opsForValue().operations.delete(session)
     }
+
+
+    fun checkUserInRedis(id: String)= redisTemplate.opsForValue().get(id) != null
+
 }

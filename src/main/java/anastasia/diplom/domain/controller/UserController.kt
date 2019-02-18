@@ -34,7 +34,7 @@ open class UserController(service: UserService) {
             ApiResponse(code = 400, message = "Invalid request")
     )
     fun register(@RequestParam(value = "username", required = false) username: String,
-    @RequestParam(value = "password", required = false) password: String,
+                 @RequestParam(value = "password", required = false) password: String,
                  @RequestParam(value = "name", required = false) name: String): ResponseEntity<Unit> {
         return ResponseEntity(userService.create(username, password, name), HttpStatus.CREATED)
     }
@@ -47,13 +47,13 @@ open class UserController(service: UserService) {
             ApiResponse(code = 400, message = "Invalid request")
     )
     fun login(@RequestParam(value = "username", required = false) username: String,
-               @RequestParam(value = "password", required = false) password: String,
-               req: HttpServletRequest): ResponseEntity<SessionObject> {
+              @RequestParam(value = "password", required = false) password: String,
+              req: HttpServletRequest): ResponseEntity<SessionObject> {
         if (username.trim() == "" || password.trim() == "") {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         } else if (!userService.check(username, password)) {
             return ResponseEntity(HttpStatus.NOT_FOUND)
-        }else{
+        } else {
             val sessionObj = SessionObject(req.session.id, userService.getIdByUsername(username.trim()))
             userService.addSessionRedis(sessionObj.sessionId, username)
             return ResponseEntity(sessionObj, HttpStatus.CREATED)
@@ -67,7 +67,7 @@ open class UserController(service: UserService) {
             ApiResponse(code = 201, message = "User logout successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun logout(req: HttpServletRequest){
+    fun logout(req: HttpServletRequest) {
         userService.deleteSessionRedis(req.requestedSessionId)
     }
 
