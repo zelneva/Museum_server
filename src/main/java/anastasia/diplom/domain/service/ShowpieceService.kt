@@ -14,11 +14,13 @@ open class ShowpieceService {
 
     companion object {
         lateinit var showpieceRepository: ShowpieceRepository
+        lateinit var userService: UserService
     }
 
     @Autowired
-    constructor(repository: ShowpieceRepository) {
+    constructor(repository: ShowpieceRepository, userServ: UserService) {
         showpieceRepository = repository
+        userService = userServ
     }
 
 
@@ -47,7 +49,7 @@ open class ShowpieceService {
 
 
     @Transactional
-    open fun delete(id: UUID){
+    open fun delete(id: UUID) {
         showpieceRepository.delete(id)
     }
 
@@ -56,4 +58,14 @@ open class ShowpieceService {
     fun findAll() = showpieceRepository.findAll()
 
 
+    fun isAdmin(sessionId: String): Boolean {
+        if (userService.checkUserInRedis(sessionId)) {
+            val userId = userService.getUserIdFromSessionId(sessionId)
+            val user = UserService.userRepository.findOne(UUID.fromString(userId))
+            if (user.role == "admin") {
+                return true
+            }
+        }
+        return false
+    }
 }

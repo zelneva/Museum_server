@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api/showpiece")
@@ -47,8 +48,13 @@ class ShowpieceController(service: ShowpieceService) {
             ApiResponse(code = 201, message = "Showpiece created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(showpiece: ShowpieceRequest)
-            = ResponseEntity(showpieceService.create(showpiece), HttpStatus.CREATED)
+    fun create(showpiece: ShowpieceRequest, req: HttpServletRequest): ResponseEntity<Unit> {
+        if (showpieceService.isAdmin(req.session.id)){
+            return ResponseEntity(showpieceService.create(showpiece), HttpStatus.CREATED)
+        }else{
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
 
 
     @DeleteMapping("/{id}")
@@ -58,8 +64,14 @@ class ShowpieceController(service: ShowpieceService) {
             ApiResponse(code = 200, message = "Showpiece removed successfully"),
             ApiResponse(code = 404, message = "Showpiece not found")
     )
-    fun delete(@PathVariable("id") id: UUID) =
-            ResponseEntity(showpieceService.delete(id), HttpStatus.OK)
+    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
+        if (showpieceService.isAdmin(req.session.id)){
+            return ResponseEntity(showpieceService.delete(id), HttpStatus.OK)
+        }else{
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
+
 
 
     @PutMapping("/{id}")
@@ -69,7 +81,12 @@ class ShowpieceController(service: ShowpieceService) {
             ApiResponse(code = 404, message = "Showpiece not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, showpiece: ShowpieceRequest)
-            = ResponseEntity(showpieceService.update(id, showpiece), HttpStatus.OK)
+    fun update(@PathVariable("id") id: UUID, showpiece: ShowpieceRequest, req: HttpServletRequest): ResponseEntity<Showpiece> {
+        if (showpieceService.isAdmin(req.session.id)){
+            return ResponseEntity(showpieceService.update(id, showpiece), HttpStatus.OK)
+        }else{
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
 
 }

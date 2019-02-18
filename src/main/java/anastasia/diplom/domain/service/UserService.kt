@@ -81,7 +81,8 @@ open class UserService {
         redisTemplate.opsForValue().operations.delete(session)
     }
 
+    fun checkUserInRedis(sessionId: String)= redisTemplate.opsForValue().get(sessionId) != null
 
-    fun checkUserInRedis(id: String)= redisTemplate.opsForValue().get(id) != null
+    fun getUserIdFromSessionId(sessionId: String) = redisTemplate.opsForValue().get(sessionId)
 
 }
