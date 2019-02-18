@@ -14,11 +14,13 @@ open class ShowpieceLocaleDataService {
 
     companion object {
         lateinit var showpieceLocaleDataRepository: ShowpieceLocaleDataRepository
+        lateinit var userService: UserService
     }
 
     @Autowired
-    constructor(repository: ShowpieceLocaleDataRepository) {
+    constructor(repository: ShowpieceLocaleDataRepository, userServ: UserService) {
         showpieceLocaleDataRepository = repository
+        ShowpieceService.userService = userServ
     }
 
 
@@ -56,4 +58,16 @@ open class ShowpieceLocaleDataService {
 
     //return list all of data about showpiece by id
     fun findDataById(showpieceId: UUID) = showpieceLocaleDataRepository.findByShowpieceId(showpieceId)
+
+
+    fun isAdmin(sessionId: String): Boolean {
+        if (ShowpieceService.userService.checkUserInRedis(sessionId)) {
+            val userId = ShowpieceService.userService.getUserIdFromSessionId(sessionId)
+            val user = UserService.userRepository.findOne(UUID.fromString(userId))
+            if (user.role == "admin") {
+                return true
+            }
+        }
+        return false
+    }
 }

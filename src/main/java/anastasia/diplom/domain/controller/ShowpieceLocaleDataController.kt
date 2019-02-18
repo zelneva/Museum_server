@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api/locale/showpiece")
@@ -28,8 +29,7 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
             ApiResponse(code = 200, message = "Showpiece local data found"),
             ApiResponse(code = 404, message = "Showpiece local data not found")
     )
-    fun findOne(@PathVariable("id") id: UUID)
-            = ResponseEntity.ok(showpieceLocaleDataService.findOne(id))
+    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(showpieceLocaleDataService.findOne(id))
 
 
     @GetMapping
@@ -39,7 +39,7 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
             ApiResponse(code = 404, message = "Showpiece local data not found")
     )
     fun find(@RequestParam(value = "id", required = false) showpieceId: UUID?): ResponseEntity<List<ShowpieceLocaleData>> {
-        if(showpieceId != null){
+        if (showpieceId != null) {
             return ResponseEntity.ok(showpieceLocaleDataService.findDataById(showpieceId))
         }
         return ResponseEntity.ok(showpieceLocaleDataService.findAll())
@@ -52,8 +52,13 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
             ApiResponse(code = 201, message = "Showpiece locale data created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(showpieceLocaleDataRequest: ShowpieceLocaleDataRequest)
-            = ResponseEntity(showpieceLocaleDataService.create(showpieceLocaleDataRequest), HttpStatus.CREATED)
+    fun create(showpieceLocaleDataRequest: ShowpieceLocaleDataRequest, req: HttpServletRequest): ResponseEntity<Unit> {
+        if (showpieceLocaleDataService.isAdmin(req.session.id)) {
+            return ResponseEntity(showpieceLocaleDataService.create(showpieceLocaleDataRequest), HttpStatus.CREATED)
+        } else {
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
 
 
     @DeleteMapping("/{id}")
@@ -63,8 +68,13 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
             ApiResponse(code = 200, message = "Showpiece locale data removed successfully"),
             ApiResponse(code = 404, message = "Showpiece locale data not found")
     )
-    fun delete(@PathVariable("id") id: UUID) =
-            ResponseEntity(showpieceLocaleDataService.delete(id), HttpStatus.OK)
+    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
+        if (showpieceLocaleDataService.isAdmin(req.session.id)) {
+            return ResponseEntity(showpieceLocaleDataService.delete(id), HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
 
 
     @PutMapping("/{id}")
@@ -74,7 +84,13 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
             ApiResponse(code = 404, message = "Showpiece locale data not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, showpieceLocaleDataRequest: ShowpieceLocaleDataRequest)
-            = ResponseEntity(showpieceLocaleDataService.update(id, showpieceLocaleDataRequest), HttpStatus.OK)
+    fun update(@PathVariable("id") id: UUID, showpieceLocaleDataRequest: ShowpieceLocaleDataRequest,
+               req: HttpServletRequest): ResponseEntity<ShowpieceLocaleData> {
+        if (showpieceLocaleDataService.isAdmin(req.session.id)) {
+            return ResponseEntity(showpieceLocaleDataService.update(id, showpieceLocaleDataRequest), HttpStatus.OK)
+        } else {
+            return ResponseEntity(HttpStatus.BAD_REQUEST)
+        }
+    }
 
 }
