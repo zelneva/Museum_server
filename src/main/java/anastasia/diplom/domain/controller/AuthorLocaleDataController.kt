@@ -12,11 +12,12 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api/locale/author")
 @Api(tags = arrayOf("author"), description = "Author locale data API")
-class AuthorLocaleDataController (service: AuthorLocaleDataService){
+class AuthorLocaleDataController(service: AuthorLocaleDataService) {
 
     @Autowired
     val authorLocaleDataService = service
@@ -28,8 +29,7 @@ class AuthorLocaleDataController (service: AuthorLocaleDataService){
             ApiResponse(code = 200, message = "Author local data found"),
             ApiResponse(code = 404, message = "Author local data not found")
     )
-    fun findOne(@PathVariable("id") id: UUID)
-            = ResponseEntity.ok(authorLocaleDataService.findOne(id))
+    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(authorLocaleDataService.findOne(id))
 
 
     @GetMapping
@@ -39,7 +39,7 @@ class AuthorLocaleDataController (service: AuthorLocaleDataService){
             ApiResponse(code = 404, message = "Author local data not found")
     )
     fun find(@RequestParam(value = "id", required = false) authorId: UUID?): ResponseEntity<List<AuthorLocaleData>> {
-        if(authorId != null){
+        if (authorId != null) {
             return ResponseEntity.ok(authorLocaleDataService.findDataById(authorId))
         }
         return ResponseEntity.ok(authorLocaleDataService.findAll())
@@ -52,8 +52,11 @@ class AuthorLocaleDataController (service: AuthorLocaleDataService){
             ApiResponse(code = 201, message = "Author locale data created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(authorLocaleData: AuthorLocaleDataRequest)
-            = ResponseEntity(authorLocaleDataService.create(authorLocaleData), HttpStatus.CREATED)
+    fun create(authorLocaleData: AuthorLocaleDataRequest, req: HttpServletRequest): ResponseEntity<Unit> {
+        return if (authorLocaleDataService.isAdmin(req.session.id)) {
+            ResponseEntity(authorLocaleDataService.create(authorLocaleData), HttpStatus.CREATED)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 
     @DeleteMapping("/{id}")
@@ -63,8 +66,11 @@ class AuthorLocaleDataController (service: AuthorLocaleDataService){
             ApiResponse(code = 200, message = "Author locale data removed successfully"),
             ApiResponse(code = 404, message = "Author locale data not found")
     )
-    fun delete(@PathVariable("id") id: UUID) =
+    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
+        return if (authorLocaleDataService.isAdmin(req.session.id)) {
             ResponseEntity(authorLocaleDataService.delete(id), HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 
     @PutMapping("/{id}")
@@ -74,7 +80,9 @@ class AuthorLocaleDataController (service: AuthorLocaleDataService){
             ApiResponse(code = 404, message = "Author locale data not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, authorLocaleData: AuthorLocaleDataRequest)
-            = ResponseEntity(authorLocaleDataService.update(id, authorLocaleData), HttpStatus.OK)
-
+    fun update(@PathVariable("id") id: UUID, authorLocaleData: AuthorLocaleDataRequest, req: HttpServletRequest): ResponseEntity<AuthorLocaleData> {
+        return if (authorLocaleDataService.isAdmin(req.session.id)) {
+            ResponseEntity(authorLocaleDataService.update(id, authorLocaleData), HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 }

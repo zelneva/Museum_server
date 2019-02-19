@@ -54,7 +54,6 @@ class FavoriteController(service: FavoriteService) {
     }
 
 
-
     @GetMapping
     @ApiOperation(value = "Find favorite by user", notes = "Find the favorite by user")
     @ApiResponses(

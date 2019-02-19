@@ -2,6 +2,7 @@ package anastasia.diplom.domain.service
 
 import anastasia.diplom.domain.models.Exhibition
 import anastasia.diplom.domain.repository.ExhibitionRepository
+import anastasia.diplom.domain.repository.UserRepository
 import anastasia.diplom.domain.vo.ExhibitionRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -10,20 +11,20 @@ import java.util.*
 
 @Service
 @Transactional(readOnly = true)
-open class ExhibitionService {
+open class ExhibitionService : AbstractService {
 
     companion object {
         lateinit var exhibitionRepository: ExhibitionRepository
     }
 
     @Autowired
-    constructor(repository: ExhibitionRepository) {
+    constructor(repository: ExhibitionRepository, userService: UserService) : super(userService) {
         exhibitionRepository = repository
     }
 
 
     @Transactional
-    open fun create(exhibitionRequest: ExhibitionRequest){
+    open fun create(exhibitionRequest: ExhibitionRequest) {
         var exhibition = Exhibition()
         exhibition.name = exhibitionRequest.name
         exhibition.startsAt = exhibitionRequest.startsAt
@@ -34,7 +35,7 @@ open class ExhibitionService {
 
 
     @Transactional
-    open fun update(id: UUID, exhibitionRequest: ExhibitionRequest): Exhibition{
+    open fun update(id: UUID, exhibitionRequest: ExhibitionRequest): Exhibition {
         val exhibition = exhibitionRepository.findOne(id)
         exhibition.name = exhibitionRequest.name ?: exhibition.name
         exhibition.startsAt = exhibitionRequest.startsAt ?: exhibition.startsAt
@@ -45,7 +46,7 @@ open class ExhibitionService {
 
 
     @Transactional
-    open fun delete(id: UUID){
+    open fun delete(id: UUID) {
         exhibitionRepository.delete(id)
     }
 

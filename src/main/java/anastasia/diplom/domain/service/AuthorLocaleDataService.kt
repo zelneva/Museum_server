@@ -11,14 +11,14 @@ import java.util.*
 
 @Service
 @Transactional(readOnly = true)
-open class AuthorLocaleDataService {
+open class AuthorLocaleDataService : AbstractService {
 
     companion object {
         lateinit var authorLocaleDataRepository: AuthorLocaleDataRepository
     }
 
     @Autowired
-    constructor(repository: AuthorLocaleDataRepository) {
+    constructor(repository: AuthorLocaleDataRepository, userService: UserService) : super(userService) {
         authorLocaleDataRepository = repository
     }
 

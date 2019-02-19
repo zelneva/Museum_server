@@ -10,7 +10,7 @@ import java.util.*
 
 @Service
 @Transactional(readOnly = true)
-open class ShowpieceService: AbstractService {
+open class ShowpieceService : AbstractService {
 
     companion object {
         lateinit var showpieceRepository: ShowpieceRepository
@@ -51,7 +51,9 @@ open class ShowpieceService: AbstractService {
         showpieceRepository.delete(id)
     }
 
+
     fun findOne(id: UUID) = showpieceRepository.findOne(id)
+
 
     fun findAll() = showpieceRepository.findAll()
 }

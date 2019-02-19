@@ -11,20 +11,20 @@ import java.util.*
 
 @Service
 @Transactional(readOnly = true)
-open class MuseumService {
+open class MuseumService : AbstractService {
 
     companion object {
         lateinit var museumRepository: MuseumRepository
     }
 
     @Autowired
-    constructor(repository: MuseumRepository) {
+    constructor(repository: MuseumRepository, userService: UserService) : super(userService) {
         museumRepository = repository
     }
 
 
     @Transactional
-    open fun create(request: MuseumRequest){
+    open fun create(request: MuseumRequest) {
         var museum = Museum()
         museum.name = request.name
         museum.address = request.address
@@ -50,6 +50,7 @@ open class MuseumService {
         val museum = museumRepository.findOne(id)
         museumRepository.delete(museum)
     }
+
 
     fun findAll() = museumRepository.findAll()
 

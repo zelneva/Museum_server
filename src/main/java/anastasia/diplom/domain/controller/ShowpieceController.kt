@@ -49,9 +49,9 @@ class ShowpieceController(service: ShowpieceService) {
             ApiResponse(code = 400, message = "Invalid request")
     )
     fun create(showpiece: ShowpieceRequest, req: HttpServletRequest): ResponseEntity<Unit> {
-        if (showpieceService.isAdmin(req.session.id)){
+        if (showpieceService.isAdmin(req.session.id)) {
             return ResponseEntity(showpieceService.create(showpiece), HttpStatus.CREATED)
-        }else{
+        } else {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
     }
@@ -65,13 +65,12 @@ class ShowpieceController(service: ShowpieceService) {
             ApiResponse(code = 404, message = "Showpiece not found")
     )
     fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
-        if (showpieceService.isAdmin(req.session.id)){
+        if (showpieceService.isAdmin(req.session.id)) {
             return ResponseEntity(showpieceService.delete(id), HttpStatus.OK)
-        }else{
+        } else {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
     }
-
 
 
     @PutMapping("/{id}")
@@ -82,9 +81,9 @@ class ShowpieceController(service: ShowpieceService) {
             ApiResponse(code = 400, message = "Invalid request")
     )
     fun update(@PathVariable("id") id: UUID, showpiece: ShowpieceRequest, req: HttpServletRequest): ResponseEntity<Showpiece> {
-        if (showpieceService.isAdmin(req.session.id)){
+        if (showpieceService.isAdmin(req.session.id)) {
             return ResponseEntity(showpieceService.update(id, showpiece), HttpStatus.OK)
-        }else{
+        } else {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
     }

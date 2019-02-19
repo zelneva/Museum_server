@@ -10,14 +10,14 @@ import java.util.*
 
 @Service
 @Transactional(readOnly = true)
-open class ShowpieceLocaleDataService : AbstractService{
+open class ShowpieceLocaleDataService : AbstractService {
 
     companion object {
         lateinit var showpieceLocaleDataRepository: ShowpieceLocaleDataRepository
     }
 
     @Autowired
-    constructor(repository: ShowpieceLocaleDataRepository, userServ: UserService):super(userServ) {
+    constructor(repository: ShowpieceLocaleDataRepository, userServ: UserService) : super(userServ) {
         showpieceLocaleDataRepository = repository
     }
 
@@ -45,11 +45,11 @@ open class ShowpieceLocaleDataService : AbstractService{
 
 
     @Transactional
-    open fun delete(id:UUID){
+    open fun delete(id: UUID) {
         showpieceLocaleDataRepository.delete(id)
     }
 
-    fun findOne(id:UUID) = showpieceLocaleDataRepository.findOne(id)
+    fun findOne(id: UUID) = showpieceLocaleDataRepository.findOne(id)
 
     fun findAll() = showpieceLocaleDataRepository.findAll()
 

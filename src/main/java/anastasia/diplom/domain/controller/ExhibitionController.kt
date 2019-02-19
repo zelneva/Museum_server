@@ -1,5 +1,6 @@
 package anastasia.diplom.domain.controller
 
+import anastasia.diplom.domain.models.Exhibition
 import anastasia.diplom.domain.service.ExhibitionService
 import anastasia.diplom.domain.vo.ExhibitionRequest
 import io.swagger.annotations.Api
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api/exhibition")
@@ -26,8 +28,7 @@ class ExhibitionController(service: ExhibitionService) {
             ApiResponse(code = 200, message = "Exhibition found"),
             ApiResponse(code = 404, message = "Exhibition not found")
     )
-    fun findOne(@PathVariable("id") id: UUID)
-            = ResponseEntity.ok(exhibitionService.findOne(id))
+    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(exhibitionService.findOne(id))
 
 
     @GetMapping
@@ -45,8 +46,11 @@ class ExhibitionController(service: ExhibitionService) {
             ApiResponse(code = 201, message = "Exhibition created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(exhibitionRequest: ExhibitionRequest)
-            = ResponseEntity(exhibitionService.create(exhibitionRequest ), HttpStatus.CREATED)
+    fun create(exhibitionRequest: ExhibitionRequest, req: HttpServletRequest): ResponseEntity<Unit> {
+        return if (exhibitionService.isAdmin(req.session.id)) {
+            ResponseEntity(exhibitionService.create(exhibitionRequest), HttpStatus.CREATED)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 
     @DeleteMapping("/{id}")
@@ -56,8 +60,11 @@ class ExhibitionController(service: ExhibitionService) {
             ApiResponse(code = 200, message = "Exhibition removed successfully"),
             ApiResponse(code = 404, message = "Exhibition not found")
     )
-    fun delete(@PathVariable("id") id: UUID) =
+    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
+        return if (exhibitionService.isAdmin(req.session.id)) {
             ResponseEntity(exhibitionService.delete(id), HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 
     @PutMapping("/{id}")
@@ -67,7 +74,10 @@ class ExhibitionController(service: ExhibitionService) {
             ApiResponse(code = 404, message = "Exhibition not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun updateExhibition(@PathVariable("id") id: UUID, exhibitionRequest: ExhibitionRequest)
-            = ResponseEntity(exhibitionService.update(id, exhibitionRequest), HttpStatus.OK)
+    fun updateExhibition(@PathVariable("id") id: UUID, exhibitionRequest: ExhibitionRequest, req: HttpServletRequest): ResponseEntity<Exhibition> {
+        return if (exhibitionService.isAdmin(req.session.id)) {
+            ResponseEntity(exhibitionService.update(id, exhibitionRequest), HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 }

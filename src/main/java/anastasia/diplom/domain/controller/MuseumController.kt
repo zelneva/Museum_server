@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/api/museum")
@@ -51,7 +52,11 @@ class MuseumController(service: MuseumService) {
             ApiResponse(code = 201, message = "Museum created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(museum: MuseumRequest) = ResponseEntity(museumService.create(museum), HttpStatus.CREATED)
+    fun create(museum: MuseumRequest, req: HttpServletRequest): ResponseEntity<Unit> {
+        return if (museumService.isAdmin(req.session.id)) {
+            ResponseEntity(museumService.create(museum), HttpStatus.CREATED)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 
     @DeleteMapping("/{id}")
@@ -61,8 +66,11 @@ class MuseumController(service: MuseumService) {
             ApiResponse(code = 200, message = "Museum removed successfully"),
             ApiResponse(code = 404, message = "Museum not found")
     )
-    fun delete(@PathVariable("id") id: UUID) =
+    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
+        return if (museumService.isAdmin(req.session.id)) {
             ResponseEntity(museumService.delete(id), HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 
     @PutMapping("/{id}")
@@ -72,6 +80,10 @@ class MuseumController(service: MuseumService) {
             ApiResponse(code = 404, message = "Museum not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, museum: MuseumRequest) = ResponseEntity(museumService.update(id, museum), HttpStatus.OK)
+    fun update(@PathVariable("id") id: UUID, museum: MuseumRequest, req: HttpServletRequest): ResponseEntity<Museum> {
+        return if (museumService.isAdmin(req.session.id)) {
+            ResponseEntity(museumService.update(id, museum), HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 }

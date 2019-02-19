@@ -1,5 +1,6 @@
 package anastasia.diplom.domain.controller
 
+import anastasia.diplom.domain.models.Author
 import anastasia.diplom.domain.service.AuthorService
 import anastasia.diplom.domain.vo.AuthorRequest
 import io.swagger.annotations.Api
@@ -11,12 +12,13 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import javax.servlet.http.HttpServletRequest
 
 
 @RestController
 @RequestMapping("/api/author")
 @Api(tags = arrayOf("author"), description = "Author API")
-class AuthorController (service: AuthorService){
+class AuthorController(service: AuthorService) {
 
     @Autowired
     val authorService = service
@@ -28,8 +30,7 @@ class AuthorController (service: AuthorService){
             ApiResponse(code = 200, message = "Author found"),
             ApiResponse(code = 404, message = "Author not found")
     )
-    fun findOne(@PathVariable("id") id: UUID)
-            = ResponseEntity.ok(authorService.findOne(id))
+    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(authorService.findOne(id))
 
 
     @GetMapping
@@ -47,8 +48,11 @@ class AuthorController (service: AuthorService){
             ApiResponse(code = 201, message = "Author created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(author: AuthorRequest)
-            = ResponseEntity(authorService.create(author), HttpStatus.CREATED)
+    fun create(author: AuthorRequest, req: HttpServletRequest): ResponseEntity<Unit> {
+        return if (authorService.isAdmin(req.session.id)) {
+            ResponseEntity(authorService.create(author), HttpStatus.CREATED)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 
     @DeleteMapping("/{id}")
@@ -58,8 +62,11 @@ class AuthorController (service: AuthorService){
             ApiResponse(code = 200, message = "Author removed successfully"),
             ApiResponse(code = 404, message = "Author not found")
     )
-    fun delete(@PathVariable("id") id: UUID) =
+    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
+        return if (authorService.isAdmin(req.session.id)) {
             ResponseEntity(authorService.delete(id), HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+    }
 
 
     @PutMapping("/{id}")
@@ -69,7 +76,11 @@ class AuthorController (service: AuthorService){
             ApiResponse(code = 404, message = "Author not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, author: AuthorRequest)
-            = ResponseEntity(authorService.update(id, author), HttpStatus.OK)
+    fun update(@PathVariable("id") id: UUID, author: AuthorRequest, req: HttpServletRequest): ResponseEntity<Author> {
+        return if (authorService.isAdmin(req.session.id)) {
+            ResponseEntity(authorService.update(id, author), HttpStatus.OK)
+        } else ResponseEntity(HttpStatus.BAD_REQUEST)
+
+    }
 
 }
