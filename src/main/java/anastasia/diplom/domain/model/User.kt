@@ -1,4 +1,4 @@
-package anastasia.diplom.domain.models
+package anastasia.diplom.domain.model
 
 import lombok.Data
 import org.hibernate.annotations.GenericGenerator

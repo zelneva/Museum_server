@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.controller
 
-import anastasia.diplom.domain.models.Exhibition
+import anastasia.diplom.domain.model.Exhibition
 import anastasia.diplom.domain.service.ExhibitionService
 import anastasia.diplom.domain.vo.ExhibitionRequest
 import io.swagger.annotations.Api

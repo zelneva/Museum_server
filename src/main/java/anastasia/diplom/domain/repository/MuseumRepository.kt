@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.repository
 
-import anastasia.diplom.domain.models.Museum
+import anastasia.diplom.domain.model.Museum
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 

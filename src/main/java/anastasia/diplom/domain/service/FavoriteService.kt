@@ -1,10 +1,9 @@
 package anastasia.diplom.domain.service
 
-import anastasia.diplom.domain.models.Favorite
+import anastasia.diplom.domain.model.Favorite
 import anastasia.diplom.domain.repository.FavoriteRepository
 import anastasia.diplom.domain.repository.ShowpieceRepository
 import anastasia.diplom.domain.repository.UserRepository
-import anastasia.diplom.domain.vo.FavoriteRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service

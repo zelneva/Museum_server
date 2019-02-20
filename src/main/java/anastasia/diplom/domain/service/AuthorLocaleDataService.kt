@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.service
 
-import anastasia.diplom.domain.models.AuthorLocaleData
+import anastasia.diplom.domain.model.AuthorLocaleData
 import anastasia.diplom.domain.repository.AuthorLocaleDataRepository
 import anastasia.diplom.domain.vo.AuthorLocaleDataRequest
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.controller
 
-import anastasia.diplom.domain.models.Author
+import anastasia.diplom.domain.model.Author
 import anastasia.diplom.domain.service.AuthorService
 import anastasia.diplom.domain.vo.AuthorRequest
 import io.swagger.annotations.Api

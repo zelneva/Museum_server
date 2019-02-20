@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.service
 
-import anastasia.diplom.domain.models.Author
+import anastasia.diplom.domain.model.Author
 import anastasia.diplom.domain.repository.AuthorRepository
 import anastasia.diplom.domain.vo.AuthorRequest
 import org.springframework.beans.factory.annotation.Autowired

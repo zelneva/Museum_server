@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.repository
 
-import anastasia.diplom.domain.models.Comment
+import anastasia.diplom.domain.model.Comment
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 

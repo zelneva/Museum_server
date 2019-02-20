@@ -1,7 +1,7 @@
 package anastasia.diplom.domain.vo
 
-import anastasia.diplom.domain.models.Showpiece
-import anastasia.diplom.domain.models.User
+import anastasia.diplom.domain.model.Showpiece
+import anastasia.diplom.domain.model.User
 import lombok.Data
 import java.util.*
 

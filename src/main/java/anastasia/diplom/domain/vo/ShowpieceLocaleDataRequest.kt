@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.vo
 
-import anastasia.diplom.domain.models.Showpiece
+import anastasia.diplom.domain.model.Showpiece
 import lombok.Data
 
 @Data

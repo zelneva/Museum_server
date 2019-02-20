@@ -1,4 +1,4 @@
-package anastasia.diplom.domain.models
+package anastasia.diplom.domain.model
 
 import lombok.Data
 import org.hibernate.annotations.GenericGenerator
@@ -8,8 +8,8 @@ import javax.persistence.*
 
 @Data
 @Entity
-@Table(name = "showpiece_locale_data")
-class ShowpieceLocaleData {
+@Table(name = "author_locale_data")
+class AuthorLocaleData {
 
     @Id
     @GeneratedValue(generator = "system-uuid")
@@ -17,12 +17,13 @@ class ShowpieceLocaleData {
     var id: UUID? = null
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.MERGE))
-    @JoinColumn(name = "showpiece_id", nullable = false)
-    var showpiece: Showpiece? = null
+    @JoinColumn(name = "author_id", nullable = false)
+    var author: Author? = null
 
     var language: String? = null
 
     var name: String? = null
 
     var description: String? = null
+
 }

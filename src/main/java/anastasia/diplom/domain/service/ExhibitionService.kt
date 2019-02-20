@@ -1,8 +1,7 @@
 package anastasia.diplom.domain.service
 
-import anastasia.diplom.domain.models.Exhibition
+import anastasia.diplom.domain.model.Exhibition
 import anastasia.diplom.domain.repository.ExhibitionRepository
-import anastasia.diplom.domain.repository.UserRepository
 import anastasia.diplom.domain.vo.ExhibitionRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

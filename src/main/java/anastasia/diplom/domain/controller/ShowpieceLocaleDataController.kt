@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.controller
 
-import anastasia.diplom.domain.models.ShowpieceLocaleData
+import anastasia.diplom.domain.model.ShowpieceLocaleData
 import anastasia.diplom.domain.service.ShowpieceLocaleDataService
 import anastasia.diplom.domain.vo.ShowpieceLocaleDataRequest
 import io.swagger.annotations.Api

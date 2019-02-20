@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.repository
 
-import anastasia.diplom.domain.models.Favorite
+import anastasia.diplom.domain.model.Favorite
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.*
 

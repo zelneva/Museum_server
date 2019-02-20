@@ -1,7 +1,7 @@
 package anastasia.diplom.domain.service
 
 import anastasia.diplom.domain.exception.MuseumNotFoundException
-import anastasia.diplom.domain.models.Museum
+import anastasia.diplom.domain.model.Museum
 import anastasia.diplom.domain.repository.MuseumRepository
 import anastasia.diplom.domain.vo.MuseumRequest
 import org.springframework.beans.factory.annotation.Autowired

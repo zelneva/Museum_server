@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.service
 
-import anastasia.diplom.domain.models.Showpiece
+import anastasia.diplom.domain.model.Showpiece
 import anastasia.diplom.domain.repository.ShowpieceRepository
 import anastasia.diplom.domain.vo.ShowpieceRequest
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,11 +1,9 @@
 package anastasia.diplom.domain.service
 
-import anastasia.diplom.domain.models.Comment
+import anastasia.diplom.domain.model.Comment
 import anastasia.diplom.domain.repository.CommentRepository
 import anastasia.diplom.domain.repository.ShowpieceRepository
 import anastasia.diplom.domain.repository.UserRepository
-import anastasia.diplom.domain.service.ShowpieceService.Companion.showpieceRepository
-import anastasia.diplom.domain.vo.CommentRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service

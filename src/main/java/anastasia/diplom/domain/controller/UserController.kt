@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.controller
 
-import anastasia.diplom.domain.models.SessionObject
+import anastasia.diplom.domain.model.SessionObject
 import anastasia.diplom.domain.service.UserService
 import anastasia.diplom.domain.vo.UserRequest
 import io.swagger.annotations.Api

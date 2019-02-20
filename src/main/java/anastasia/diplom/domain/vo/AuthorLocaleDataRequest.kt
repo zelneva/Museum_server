@@ -1,6 +1,6 @@
 package anastasia.diplom.domain.vo
 
-import anastasia.diplom.domain.models.Author
+import anastasia.diplom.domain.model.Author
 
 class AuthorLocaleDataRequest {
     var name: String? = null
