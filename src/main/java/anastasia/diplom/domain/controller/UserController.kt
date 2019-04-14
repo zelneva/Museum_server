@@ -1,6 +1,8 @@
 package anastasia.diplom.domain.controller
 
+import anastasia.diplom.domain.model.LoginForm
 import anastasia.diplom.domain.model.SessionObject
+import anastasia.diplom.domain.model.User
 import anastasia.diplom.domain.service.UserService
 import anastasia.diplom.domain.vo.UserRequest
 import io.swagger.annotations.Api
@@ -35,28 +37,36 @@ open class UserController(service: UserService) {
     )
     fun register(@RequestParam(value = "username", required = false) username: String,
                  @RequestParam(value = "password", required = false) password: String,
-                 @RequestParam(value = "name", required = false) name: String): ResponseEntity<Unit> {
-        return ResponseEntity(userService.create(username, password, name), HttpStatus.CREATED)
+                 @RequestParam(value = "name", required = false) name: String,
+                 req: HttpServletRequest): ResponseEntity<SessionObject> {
+        val user = userService.create(username, password, name)
+        val sessionObj = SessionObject(UUID.fromString(req.session.id),
+                UUID.fromString(userService.getIdByUsername(user.username!!.trim())))
+        userService.addSessionRedis(sessionObj.sessionId.toString(), user.username!!)
+        return ResponseEntity(sessionObj, HttpStatus.CREATED)
     }
 
 
     @PostMapping("/login")
+    @ResponseBody
     @ApiOperation(value = "Sign in user", notes = "It permits to login user")
     @ApiResponses(
             ApiResponse(code = 201, message = "User login successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun login(@RequestParam(value = "username", required = false) username: String,
-              @RequestParam(value = "password", required = false) password: String,
+    fun login(@RequestBody loginForm: LoginForm,
               req: HttpServletRequest): ResponseEntity<SessionObject> {
-        if (username.trim() == "" || password.trim() == "") {
+        if (loginForm.username!!.trim() == "" || loginForm.password!!.trim() == "") {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
-        } else if (!userService.check(username, password)) {
+        } else if (!userService.check(loginForm.username!!, loginForm.password!!)) {
             return ResponseEntity(HttpStatus.NOT_FOUND)
-        } else {
-            val sessionObj = SessionObject(req.session.id, userService.getIdByUsername(username.trim()))
-            userService.addSessionRedis(sessionObj.sessionId, username)
+        } else if (userService.check(loginForm.username!!, loginForm.password!!)) {
+            val sessionObj = SessionObject(UUID.fromString(req.session.id),
+                    UUID.fromString(userService.getIdByUsername(loginForm.username!!.trim())))
+            userService.addSessionRedis(sessionObj.sessionId.toString(), loginForm.username!!)
             return ResponseEntity(sessionObj, HttpStatus.CREATED)
+        } else {
+            return ResponseEntity(HttpStatus.NOT_FOUND)
         }
     }
 
@@ -67,8 +77,8 @@ open class UserController(service: UserService) {
             ApiResponse(code = 201, message = "User logout successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun logout(req: HttpServletRequest) {
-        userService.deleteSessionRedis(req.requestedSessionId)
+    fun logout(@RequestParam sessionId: String): ResponseEntity<Any> {
+        return ResponseEntity(userService.deleteSessionRedis(sessionId), HttpStatus.OK)
     }
 
 
@@ -79,9 +89,10 @@ open class UserController(service: UserService) {
             ApiResponse(code = 200, message = "User removed successfully"),
             ApiResponse(code = 404, message = "User not found")
     )
-    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest) {
-        userService.deleteSessionRedis(req.requestedSessionId)
-        ResponseEntity(userService.delete(id), HttpStatus.OK)
+    fun delete(@RequestParam(value = "sessionId", required = false) sessionId: String): ResponseEntity<Unit> {
+        val userId = userService.getUserIdFromSessionId(sessionId)
+        userService.deleteSessionRedis(sessionId)
+        return ResponseEntity(userService.delete(UUID.fromString(userId)), HttpStatus.OK)
     }
 
 
@@ -92,5 +103,18 @@ open class UserController(service: UserService) {
             ApiResponse(code = 404, message = "User not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, user: UserRequest) = ResponseEntity(userService.update(id, user), HttpStatus.OK)
+    fun update(@PathVariable("id") id: UUID, user: UserRequest, sessionId: String) = ResponseEntity(userService.update(id, user), HttpStatus.OK)
+
+
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Is user info")
+    @ApiResponses(
+            ApiResponse(code = 201, message = "User find successfully"),
+            ApiResponse(code = 400, message = "Invalid request")
+    )
+    fun getUser(@PathVariable("id") id: UUID): ResponseEntity<User> {
+        val user = userService.findUserById(id)
+        return ResponseEntity(user, HttpStatus.OK)
+    }
+
 }

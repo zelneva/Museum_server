@@ -31,17 +31,19 @@ class User {
     var srcPhoto: String? = null
 
 
-    fun generatePassword(password: String): String {
-        return BCrypt.hashpw(password, BCrypt.gensalt())
+    companion object {
+        fun generatePassword(password: String): String {
+            return BCrypt.hashpw(password, BCrypt.gensalt())
+        }
+
+        fun compare(password: String, hash: String): Boolean {
+            return BCrypt.checkpw(password, hash)
+        }
     }
 
-
-    fun compare(password: String, hash: String): Boolean {
-        return BCrypt.checkpw(password, hash)
-    }
 
     override fun toString(): String {
         super.toString()
-        return "$id + ' ' + $name+ ' ' +$username"
+        return "$id"
     }
 }

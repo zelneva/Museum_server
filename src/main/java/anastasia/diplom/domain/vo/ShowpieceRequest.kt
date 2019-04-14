@@ -14,3 +14,4 @@ class ShowpieceRequest {
     var srcPhoto: String? = null
 
 }
+

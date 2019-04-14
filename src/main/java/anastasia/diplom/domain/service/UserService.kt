@@ -1,6 +1,8 @@
 package anastasia.diplom.domain.service
 
 import anastasia.diplom.domain.model.User
+import anastasia.diplom.domain.model.User.Companion.compare
+import anastasia.diplom.domain.model.User.Companion.generatePassword
 import anastasia.diplom.domain.repository.UserRepository
 import anastasia.diplom.domain.vo.UserRequest
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,14 +29,15 @@ open class UserService {
 
 
     @Transactional
-    open fun create(username: String, password: String, name:String) {
+    open fun create(username: String, password: String, name:String): User {
         val user = User()
         user.name = name.trim()
-        user.password = user.generatePassword(password).trim()
+        user.password = generatePassword(password).trim()
         user.role = "visitor"
         user.username = username.trim()
         user.srcPhoto = ""
         userRepository.save(user)
+        return user
     }
 
 
@@ -44,7 +47,7 @@ open class UserService {
         val user = userRepository.findOne(id)
         user.username = userRequest.username ?: user.username
         user.name = userRequest.name ?: user.name
-        user.password = userRequest.password ?: user.password
+        user.password = generatePassword(userRequest.password!!) ?: user.password
         user.srcPhoto = userRequest.srcPhoto ?: user.srcPhoto
         return userRepository.save(user)
     }
@@ -66,7 +69,7 @@ open class UserService {
     fun check(username: String, password: String): Boolean {
         val user = userRepository.findByUsername(username)
         if (user != null) {
-            return user.compare(password, user.generatePassword(password))
+            return compare(password, generatePassword(password))
         } else return false
     }
 
@@ -75,6 +78,9 @@ open class UserService {
 
 
     fun findByUsername(username: String) = userRepository.findByUsername(username)
+
+
+    fun findUserById(id: UUID) = userRepository.findOne(id)
 
 
     fun deleteSessionRedis(session: String){

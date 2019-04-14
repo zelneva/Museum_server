@@ -72,10 +72,10 @@ class CommentController(service: CommentService) {
 
 
     @GetMapping
-    @ApiOperation(value = "Find list comment of the exhibition", notes = "Find list comment of  the exhibition by ID")
+    @ApiOperation(value = "Find list comment of the showpiece", notes = "Find list comment of  the showpiece by ID")
     @ApiResponses(
             ApiResponse(code = 200, message = "List comment found"),
             ApiResponse(code = 404, message = "List comment not found")
     )
-    fun findListCommentByExhibitionId(@RequestParam("exhibition_id") exhibitionId: UUID) = ResponseEntity.ok(commentService.findAllByShowpieceId(exhibitionId))
+    fun findListCommentByShowpieceId(@RequestParam("showpiece_id") showpieceId: UUID) = ResponseEntity.ok(commentService.findAllByShowpieceId(showpieceId))
 }
