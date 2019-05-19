@@ -53,5 +53,8 @@ open class ExhibitionService : AbstractService {
 
     fun findAll() = exhibitionRepository.findAll()
 
+    fun findExhibitionsByMuseumId(museumId: String): List<Exhibition> =
+            findAll().filter {it.museum!!.id!!.toString() == museumId }
+
 
 }

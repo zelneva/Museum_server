@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 
+
 @RestController
 @RequestMapping("/api/showpiece")
 @Api(tags = arrayOf("showpiece"), description = "Showpiece API")
@@ -86,6 +87,30 @@ class ShowpieceController(service: ShowpieceService) {
         } else {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
+    }
+
+
+    @GetMapping("/exhibition/{exhibitionId}")
+    @ApiOperation(value = "Find showpiece by exhibition", notes = "It permits to find a showpiece")
+    @ApiResponses(
+            ApiResponse(code = 200, message = "Showpiece find successfully"),
+            ApiResponse(code = 404, message = "Showpiece not found"),
+            ApiResponse(code = 400, message = "Invalid request")
+    )
+    fun findListShowpieceByExhibitionId(@PathVariable("exhibitionId") exhibitionId: String) : ResponseEntity<List<Showpiece>> {
+        return ResponseEntity(showpieceService.getShowpieceByExhibitionId(exhibitionId), HttpStatus.OK)
+    }
+
+
+    @GetMapping("/author/{authorId}")
+    @ApiOperation(value = "Find showpiece by author", notes = "It permits to find a showpiece")
+    @ApiResponses(
+            ApiResponse(code = 200, message = "Showpiece find successfully"),
+            ApiResponse(code = 404, message = "Showpiece not found"),
+            ApiResponse(code = 400, message = "Invalid request")
+    )
+    fun findListShowpieceByAuthor(@PathVariable("authorId") authorId: String): ResponseEntity<List<Showpiece>>{
+        return ResponseEntity(showpieceService.getShowpieceByAuthor(authorId), HttpStatus.OK)
     }
 
 }

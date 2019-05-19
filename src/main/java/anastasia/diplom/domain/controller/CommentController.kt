@@ -1,5 +1,6 @@
 package anastasia.diplom.domain.controller
 
+import anastasia.diplom.domain.model.SessionObject
 import anastasia.diplom.domain.service.CommentService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.*
 import javax.servlet.http.HttpServletRequest
+import kotlin.collections.ArrayList
 
 @RestController
 @RequestMapping("/api/comment")
@@ -29,10 +31,10 @@ class CommentController(service: CommentService) {
     )
     fun create(@RequestParam(value = "showpiece", required = false) showpieceId: String,
                @RequestParam(value = "text", required = false) text: String,
-               req: HttpServletRequest): ResponseEntity<Unit> {
+               @RequestParam("session") sessionId: String): ResponseEntity<Unit> {
         val date = Date()
-        if (commentService.isUserLogin(req.session.id)) {
-            return ResponseEntity(commentService.create(showpieceId, text, date, req.session.id), HttpStatus.CREATED)
+        if (commentService.isUserLogin(sessionId)) {
+            return ResponseEntity(commentService.create(showpieceId, text, date, sessionId), HttpStatus.CREATED)
         } else {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
@@ -46,9 +48,10 @@ class CommentController(service: CommentService) {
             ApiResponse(code = 200, message = "Comment removed successfully"),
             ApiResponse(code = 404, message = "Comment not found")
     )
-    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
-        if (commentService.isUserLogin(req.session.id)) {
-            return ResponseEntity(commentService.delete(id, req.session.id), HttpStatus.OK)
+    fun delete(@PathVariable("id") id: UUID,
+               @RequestParam("session") sessionId: String): ResponseEntity<Unit> {
+        if (commentService.isUserLogin(sessionId)) {
+            return ResponseEntity(commentService.delete(id, sessionId), HttpStatus.OK)
         } else {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
@@ -62,9 +65,11 @@ class CommentController(service: CommentService) {
             ApiResponse(code = 404, message = "Comment not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, text: String, req: HttpServletRequest): ResponseEntity<Unit> {
-        if (commentService.isUserLogin(req.session.id)) {
-            return ResponseEntity(commentService.update(id, text, Date(), req.session.id), HttpStatus.OK)
+    fun update(@PathVariable("id") id: UUID,
+               @RequestParam("text") text: String,
+               @RequestParam("session") sessionId: String): ResponseEntity<Unit> {
+        if (commentService.isUserLogin(sessionId)) {
+            return ResponseEntity(commentService.update(id, text, Date(), sessionId), HttpStatus.OK)
         } else {
             return ResponseEntity(HttpStatus.BAD_REQUEST)
         }
@@ -77,5 +82,5 @@ class CommentController(service: CommentService) {
             ApiResponse(code = 200, message = "List comment found"),
             ApiResponse(code = 404, message = "List comment not found")
     )
-    fun findListCommentByShowpieceId(@RequestParam("showpiece_id") showpieceId: UUID) = ResponseEntity.ok(commentService.findAllByShowpieceId(showpieceId))
+    fun findListCommentByShowpieceId(@RequestParam("showpieceId") showpieceId: UUID) = ResponseEntity.ok(commentService.findAllByShowpieceId(showpieceId))
 }

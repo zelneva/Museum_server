@@ -28,8 +28,6 @@ open class MuseumService : AbstractService {
         var museum = Museum()
         museum.name = request.name
         museum.address = request.address
-        museum.lat = request.lat
-        museum.lng = request.lng
         museumRepository.save(museum)
     }
 
@@ -38,8 +36,6 @@ open class MuseumService : AbstractService {
     open fun update(id: UUID, museumRequest: MuseumRequest): Museum {
         val museum = museumRepository.findOne(id)
         museum.name = museumRequest.name ?: museum.name
-        museum.lng = museumRequest.lng ?: museum.lng
-        museum.lat = museumRequest.lat ?: museum.lat
         museum.address = museumRequest.address ?: museum.address
         return museumRepository.save(museum)
     }

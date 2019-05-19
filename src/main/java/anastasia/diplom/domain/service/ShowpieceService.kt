@@ -56,4 +56,14 @@ open class ShowpieceService : AbstractService {
 
 
     fun findAll() = showpieceRepository.findAll()
+
+
+    fun getShowpieceByExhibitionId( exhibitionId: String): List<Showpiece> {
+         return findAll().filter { showpiece -> showpiece.exhibition!!.id.toString() == exhibitionId }
+    }
+
+
+    fun getShowpieceByAuthor(authorId: String): List<Showpiece>{
+        return findAll().filter{ showpiece -> showpiece.author!!.id.toString() == authorId}
+    }
 }

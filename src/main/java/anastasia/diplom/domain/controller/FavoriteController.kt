@@ -31,9 +31,9 @@ class FavoriteController(service: FavoriteService) {
             ApiResponse(code = 400, message = "Invalid request")
     )
     fun create(@RequestParam(value = "showpiece", required = false) showpieceId: String,
-               req: HttpServletRequest): ResponseEntity<Unit> {
-        if (favoriteService.isUserLogin(req.session.id)) {
-            return ResponseEntity(favoriteService.create(showpieceId, req.session.id), HttpStatus.CREATED)
+               @RequestParam(value = "session", required = false) sessionId: String): ResponseEntity<Unit> {
+        if (favoriteService.isUserLogin(sessionId)) {
+            return ResponseEntity(favoriteService.create(showpieceId, sessionId), HttpStatus.CREATED)
         } else
             return ResponseEntity(HttpStatus.BAD_REQUEST)
     }
@@ -46,9 +46,10 @@ class FavoriteController(service: FavoriteService) {
             ApiResponse(code = 200, message = "Favorite removed successfully"),
             ApiResponse(code = 404, message = "Favorite not found")
     )
-    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
-        if (favoriteService.isUserLogin(req.session.id)) {
-            return ResponseEntity(favoriteService.delete(id, req.session.id), HttpStatus.OK)
+    fun delete(@PathVariable("id") id: UUID,
+               @RequestParam(value = "session", required = false) sessionId: String): ResponseEntity<Unit> {
+        if (favoriteService.isUserLogin(sessionId)) {
+            return ResponseEntity(favoriteService.delete(id, sessionId), HttpStatus.OK)
         } else
             return ResponseEntity(HttpStatus.BAD_REQUEST)
     }
@@ -60,6 +61,6 @@ class FavoriteController(service: FavoriteService) {
             ApiResponse(code = 200, message = "Favorite found"),
             ApiResponse(code = 404, message = "Favorite not found")
     )
-    fun findFavoriteByUser(req: HttpServletRequest) = ResponseEntity.ok(favoriteService.favoriteByUser(req.session.id))
+    fun findFavoriteByUser( @RequestParam(value = "session", required = false) sessionId: String) = ResponseEntity.ok(favoriteService.favoriteByUser(sessionId))
 
 }

@@ -80,4 +80,15 @@ class ExhibitionController(service: ExhibitionService) {
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 
+
+    @GetMapping("/museum/{museumId}")
+    @ApiOperation(value = "Find exhibition", notes = "Find the exhibition by MuseumID")
+    @ApiResponses(
+            ApiResponse(code = 200, message = "Exhibition found"),
+            ApiResponse(code = 404, message = "Exhibition not found")
+    )
+    fun findExhibitionByMuseumId(@PathVariable("museumId") museumId: String): ResponseEntity<List<Exhibition>>{
+        return ResponseEntity(exhibitionService.findExhibitionsByMuseumId(museumId), HttpStatus.OK)
+    }
+
 }
