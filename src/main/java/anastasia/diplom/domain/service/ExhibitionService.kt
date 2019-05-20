@@ -2,10 +2,12 @@ package anastasia.diplom.domain.service
 
 import anastasia.diplom.domain.model.Exhibition
 import anastasia.diplom.domain.repository.ExhibitionRepository
+import anastasia.diplom.domain.repository.MuseumRepository
 import anastasia.diplom.domain.vo.ExhibitionRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Service
@@ -14,11 +16,13 @@ open class ExhibitionService : AbstractService {
 
     companion object {
         lateinit var exhibitionRepository: ExhibitionRepository
+        lateinit var museumService: MuseumService
     }
 
     @Autowired
-    constructor(repository: ExhibitionRepository, userService: UserService) : super(userService) {
+    constructor(repository: ExhibitionRepository, userService: UserService, museum: MuseumService) : super(userService) {
         exhibitionRepository = repository
+        museumService = museum
     }
 
 
@@ -26,9 +30,9 @@ open class ExhibitionService : AbstractService {
     open fun create(exhibitionRequest: ExhibitionRequest) {
         var exhibition = Exhibition()
         exhibition.name = exhibitionRequest.name
-        exhibition.startsAt = exhibitionRequest.startsAt
-        exhibition.endsAt = exhibitionRequest.endsAt
-        exhibition.museum = exhibitionRequest.museum
+        exhibition.startsAt = SimpleDateFormat("dd/MM/yyyy").parse(exhibitionRequest.startsAt)
+        exhibition.endsAt = SimpleDateFormat("dd/MM/yyyy").parse(exhibitionRequest.endsAt)
+        exhibition.museum = museumService.findOne(UUID.fromString(exhibitionRequest.museumId))
         exhibitionRepository.save(exhibition)
     }
 
@@ -37,9 +41,9 @@ open class ExhibitionService : AbstractService {
     open fun update(id: UUID, exhibitionRequest: ExhibitionRequest): Exhibition {
         val exhibition = exhibitionRepository.findOne(id)
         exhibition.name = exhibitionRequest.name ?: exhibition.name
-        exhibition.startsAt = exhibitionRequest.startsAt ?: exhibition.startsAt
-        exhibition.endsAt = exhibitionRequest.endsAt ?: exhibition.endsAt
-        exhibition.museum = exhibitionRequest.museum ?: exhibition.museum
+        exhibition.startsAt = SimpleDateFormat("dd/MM/yyyy").parse(exhibitionRequest.startsAt) ?: exhibition.startsAt
+        exhibition.endsAt = SimpleDateFormat("dd/MM/yyyy").parse(exhibitionRequest.endsAt) ?: exhibition.endsAt
+        exhibition.museum = museumService.findOne(UUID.fromString(exhibitionRequest.museumId)) ?: exhibition.museum
         return exhibitionRepository.save(exhibition)
     }
 

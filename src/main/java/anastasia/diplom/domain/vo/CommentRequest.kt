@@ -6,9 +6,9 @@ import lombok.Data
 import java.util.*
 
 @Data
-class CommentRequest {
-    var user: User? = null
-    var showpiece: Showpiece? = null
-    var text: String? = null
-    var date: Date? = null
-}
+class CommentRequest(
+        var user: User,
+        var showpieceId: String,
+        var text: String,
+        var date: String
+)

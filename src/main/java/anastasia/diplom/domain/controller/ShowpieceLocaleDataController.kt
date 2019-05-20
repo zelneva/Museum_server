@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/api/locale/showpiece")
 @Api(tags = arrayOf("showpiece"), description = "Showpiece locale data API")
-class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
+class ShowpieceLocaleDataController( service: ShowpieceLocaleDataService) {
 
     @Autowired
     val showpieceLocaleDataService = service
@@ -46,21 +46,6 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
     }
 
 
-    @PostMapping
-    @ApiOperation(value = "Create showpiece locale data", notes = "It permits to create a new showpiece")
-    @ApiResponses(
-            ApiResponse(code = 201, message = "Showpiece locale data created successfully"),
-            ApiResponse(code = 400, message = "Invalid request")
-    )
-    fun create(showpieceLocaleDataRequest: ShowpieceLocaleDataRequest, req: HttpServletRequest): ResponseEntity<Unit> {
-        return if (showpieceLocaleDataService.isAdmin(req.session.id)) {
-            ResponseEntity(showpieceLocaleDataService.create(showpieceLocaleDataRequest), HttpStatus.CREATED)
-        } else {
-            ResponseEntity(HttpStatus.BAD_REQUEST)
-        }
-    }
-
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Remove showpiece", notes = "It permits to remove a showpiece")
@@ -77,20 +62,19 @@ class ShowpieceLocaleDataController(service: ShowpieceLocaleDataService) {
     }
 
 
-    @PutMapping("/{id}")
-    @ApiOperation(value = "Update showpiece locale data", notes = "It permits to showpiece a author")
+    @PutMapping
+    @ApiOperation("Add showpiece to exhibition")
     @ApiResponses(
             ApiResponse(code = 200, message = "Showpiece locale data update successfully"),
             ApiResponse(code = 404, message = "Showpiece locale data not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, showpieceLocaleDataRequest: ShowpieceLocaleDataRequest,
-               req: HttpServletRequest): ResponseEntity<ShowpieceLocaleData> {
-        return if (showpieceLocaleDataService.isAdmin(req.session.id)) {
-            ResponseEntity(showpieceLocaleDataService.update(id, showpieceLocaleDataRequest), HttpStatus.OK)
-        } else {
-            ResponseEntity(HttpStatus.BAD_REQUEST)
+    fun addExhibition(list: Array<String>, exhibitionId: String, session: String): Boolean {
+        if (showpieceLocaleDataService.isAdmin(session)) {
+                showpieceLocaleDataService.updateExhibition(list, exhibitionId)
+            return true
         }
+        else return false
     }
 
 }

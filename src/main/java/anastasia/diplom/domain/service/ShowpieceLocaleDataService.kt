@@ -1,5 +1,6 @@
 package anastasia.diplom.domain.service
 
+import anastasia.diplom.domain.model.Showpiece
 import anastasia.diplom.domain.model.ShowpieceLocaleData
 import anastasia.diplom.domain.repository.ShowpieceLocaleDataRepository
 import anastasia.diplom.domain.vo.ShowpieceLocaleDataRequest
@@ -14,32 +15,34 @@ open class ShowpieceLocaleDataService : AbstractService {
 
     companion object {
         lateinit var showpieceLocaleDataRepository: ShowpieceLocaleDataRepository
+        lateinit var exhibitionService: ExhibitionService
     }
 
     @Autowired
-    constructor(repository: ShowpieceLocaleDataRepository, userServ: UserService) : super(userServ) {
+    constructor(repository: ShowpieceLocaleDataRepository, exhibitionServ: ExhibitionService, userServ: UserService) : super(userServ) {
         showpieceLocaleDataRepository = repository
+        exhibitionService = exhibitionServ
     }
 
 
     @Transactional
-    open fun create(showpieceLocaleDataRequest: ShowpieceLocaleDataRequest) {
+    open fun create(language: String, name: String, description: String, showpiece: Showpiece) {
         val showpieceLocaleData = ShowpieceLocaleData()
-        showpieceLocaleData.description = showpieceLocaleDataRequest.description
-        showpieceLocaleData.language = showpieceLocaleDataRequest.language
-        showpieceLocaleData.name = showpieceLocaleDataRequest.name
-        showpieceLocaleData.showpiece = showpieceLocaleDataRequest.showpiece
+        showpieceLocaleData.description = description
+        showpieceLocaleData.language = language
+        showpieceLocaleData.name = name
+        showpieceLocaleData.showpiece = showpiece
         showpieceLocaleDataRepository.save(showpieceLocaleData)
     }
 
 
     @Transactional
-    open fun update(id: UUID, showpieceLocaleDataRequest: ShowpieceLocaleDataRequest): ShowpieceLocaleData {
+    open fun update(id: UUID, language: String, name: String, description: String, showpiece: Showpiece): ShowpieceLocaleData {
         val showpieceLocaleData = showpieceLocaleDataRepository.findOne(id)
-        showpieceLocaleData.name = showpieceLocaleDataRequest.name ?: showpieceLocaleData.name
-        showpieceLocaleData.showpiece = showpieceLocaleDataRequest.showpiece ?: showpieceLocaleData.showpiece
-        showpieceLocaleData.language = showpieceLocaleDataRequest.language ?: showpieceLocaleData.language
-        showpieceLocaleData.description = showpieceLocaleDataRequest.description ?: showpieceLocaleData.description
+        showpieceLocaleData.name = name ?: showpieceLocaleData.name
+        showpieceLocaleData.showpiece = showpiece
+        showpieceLocaleData.language = language ?: showpieceLocaleData.language
+        showpieceLocaleData.description = description ?: showpieceLocaleData.description
         return showpieceLocaleDataRepository.save(showpieceLocaleData)
     }
 
@@ -56,5 +59,14 @@ open class ShowpieceLocaleDataService : AbstractService {
 
     //return list all of data about showpiece by id
     fun findDataById(showpieceId: UUID) = showpieceLocaleDataRepository.findByShowpieceId(showpieceId)
+
+
+    fun updateExhibition(array: Array<String>, exhibitionId: String) {
+        for (a in array) {
+            val showpieceLocaleData= showpieceLocaleDataRepository.findOne(UUID.fromString(a))
+            showpieceLocaleData.showpiece!!.exhibition =  exhibitionService.findOne(UUID.fromString(exhibitionId))
+            showpieceLocaleDataRepository.save(showpieceLocaleData)
+        }
+    }
 
 }

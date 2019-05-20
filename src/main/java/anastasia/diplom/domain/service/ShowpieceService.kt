@@ -6,6 +6,7 @@ import anastasia.diplom.domain.vo.ShowpieceRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Service
@@ -14,34 +15,54 @@ open class ShowpieceService : AbstractService {
 
     companion object {
         lateinit var showpieceRepository: ShowpieceRepository
+        lateinit var authorService: AuthorService
+        lateinit var exhibitionService: ExhibitionService
+        lateinit var showpieceLocaleDataService: ShowpieceLocaleDataService
+        lateinit var authorLocaleDataService: AuthorLocaleDataService
     }
 
     @Autowired
-    constructor(repository: ShowpieceRepository, userService: UserService) : super(userService) {
+    constructor(repository: ShowpieceRepository, author: AuthorService,
+                exhibition: ExhibitionService, showpieceLocaleDataServ: ShowpieceLocaleDataService,
+                authorLocaleDataServ: AuthorLocaleDataService,userService: UserService) : super(userService) {
         showpieceRepository = repository
+        authorService = author
+        exhibitionService = exhibition
+        showpieceLocaleDataService = showpieceLocaleDataServ
+        authorLocaleDataService = authorLocaleDataServ
     }
 
 
     @Transactional
-    open fun create(showpieceRequest: ShowpieceRequest) {
+    open fun create(srcPhoto: String?, year: String, authorName: String,
+                    titleRus: String, descriptionRus: String,
+                    titleEng: String, descriptionEng: String,
+                    titleGer: String, descriptionGer: String) {
         val showpiece = Showpiece()
-        showpiece.author = showpieceRequest.author
-        showpiece.date = showpieceRequest.date
-        showpiece.exhibition = showpieceRequest.exhibition
-        showpiece.genre = showpieceRequest.genre
-        showpiece.srcPhoto = showpieceRequest.srcPhoto
+        showpiece.srcPhoto = srcPhoto
+        showpiece.date = year
+        showpiece.author = authorLocaleDataService.findByName(authorName).author
+        showpieceLocaleDataService.create("ru", titleRus, descriptionRus, showpiece)
+        showpieceLocaleDataService.create("en", titleEng, descriptionEng, showpiece)
+        showpieceLocaleDataService.create("ge", titleGer, descriptionGer, showpiece)
+        showpiece.exhibition = null
         showpieceRepository.save(showpiece)
     }
 
 
     @Transactional
-    open fun update(id: UUID, showpieceRequest: ShowpieceRequest): Showpiece {
+    open fun update(id: UUID, srcPhoto: String?, year: String, authorName: String,
+                    titleRus: String, descriptionRus: String,
+                    titleEng: String, descriptionEng: String,
+                    titleGer: String, descriptionGer: String): Showpiece {
         val showpiece = showpieceRepository.findOne(id)
-        showpiece.author = showpieceRequest.author ?: showpiece.author
-        showpiece.date = showpieceRequest.date ?: showpiece.date
-        showpiece.exhibition = showpieceRequest.exhibition ?: showpiece.exhibition
-        showpiece.genre = showpieceRequest.genre ?: showpiece.genre
-        showpiece.srcPhoto = showpieceRequest.srcPhoto ?: showpiece.srcPhoto
+        showpiece.srcPhoto = srcPhoto
+        showpiece.date = year
+        showpiece.author = authorLocaleDataService.findByName(authorName).author
+        showpieceLocaleDataService.create("ru", titleRus, descriptionRus, showpiece)
+        showpieceLocaleDataService.create("en", titleEng, descriptionEng, showpiece)
+        showpieceLocaleDataService.create("ge", titleGer, descriptionGer, showpiece)
+        showpiece.exhibition = null
         return showpieceRepository.save(showpiece)
     }
 
@@ -65,5 +86,12 @@ open class ShowpieceService : AbstractService {
 
     fun getShowpieceByAuthor(authorId: String): List<Showpiece>{
         return findAll().filter{ showpiece -> showpiece.author!!.id.toString() == authorId}
+    }
+
+
+    fun updateExhibition(showpieceId: String, exhibitionId: String){
+        val showpiece = showpieceRepository.findOne(UUID.fromString(showpieceId))
+        showpiece.exhibition = exhibitionService.findOne(UUID.fromString(exhibitionId))
+        showpieceRepository.save(showpiece)
     }
 }

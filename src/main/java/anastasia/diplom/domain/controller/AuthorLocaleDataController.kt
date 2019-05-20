@@ -46,19 +46,6 @@ class AuthorLocaleDataController(service: AuthorLocaleDataService) {
     }
 
 
-    @PostMapping
-    @ApiOperation(value = "Create author locale data", notes = "It permits to create a new author")
-    @ApiResponses(
-            ApiResponse(code = 201, message = "Author locale data created successfully"),
-            ApiResponse(code = 400, message = "Invalid request")
-    )
-    fun create(authorLocaleData: AuthorLocaleDataRequest, req: HttpServletRequest): ResponseEntity<Unit> {
-        return if (authorLocaleDataService.isAdmin(req.session.id)) {
-            ResponseEntity(authorLocaleDataService.create(authorLocaleData), HttpStatus.CREATED)
-        } else ResponseEntity(HttpStatus.BAD_REQUEST)
-    }
-
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiOperation(value = "Remove author", notes = "It permits to remove a author")
@@ -66,23 +53,9 @@ class AuthorLocaleDataController(service: AuthorLocaleDataService) {
             ApiResponse(code = 200, message = "Author locale data removed successfully"),
             ApiResponse(code = 404, message = "Author locale data not found")
     )
-    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
-        return if (authorLocaleDataService.isAdmin(req.session.id)) {
+    fun delete(@PathVariable("id") id: UUID, session: String): ResponseEntity<Unit> {
+        return if (authorLocaleDataService.isAdmin(session)) {
             ResponseEntity(authorLocaleDataService.delete(id), HttpStatus.OK)
-        } else ResponseEntity(HttpStatus.BAD_REQUEST)
-    }
-
-
-    @PutMapping("/{id}")
-    @ApiOperation(value = "Update author locale data", notes = "It permits to update a author")
-    @ApiResponses(
-            ApiResponse(code = 200, message = "Author locale data update successfully"),
-            ApiResponse(code = 404, message = "Author locale data not found"),
-            ApiResponse(code = 400, message = "Invalid request")
-    )
-    fun update(@PathVariable("id") id: UUID, authorLocaleData: AuthorLocaleDataRequest, req: HttpServletRequest): ResponseEntity<AuthorLocaleData> {
-        return if (authorLocaleDataService.isAdmin(req.session.id)) {
-            ResponseEntity(authorLocaleDataService.update(id, authorLocaleData), HttpStatus.OK)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 }

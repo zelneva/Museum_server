@@ -48,9 +48,16 @@ class AuthorController(service: AuthorService) {
             ApiResponse(code = 201, message = "Author created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(author: AuthorRequest, req: HttpServletRequest): ResponseEntity<Unit> {
-        return if (authorService.isAdmin(req.session.id)) {
-            ResponseEntity(authorService.create(author), HttpStatus.CREATED)
+    fun create(srcPhoto: String?, bornAt: String, deadAt: String,
+               titleRus: String, descriptionRus: String,
+               titleEng: String, descriptionEng: String,
+               titleGer: String, descriptionGer: String, session: String): ResponseEntity<Unit> {
+        return if (authorService.isAdmin(session)) {
+            ResponseEntity(authorService.create(srcPhoto,
+                    bornAt, deadAt,
+                    titleRus, descriptionRus,
+                    titleEng, descriptionEng,
+                    titleGer, descriptionGer), HttpStatus.CREATED)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 
@@ -62,8 +69,8 @@ class AuthorController(service: AuthorService) {
             ApiResponse(code = 200, message = "Author removed successfully"),
             ApiResponse(code = 404, message = "Author not found")
     )
-    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
-        return if (authorService.isAdmin(req.session.id)) {
+    fun delete(@PathVariable("id") id: UUID, session: String): ResponseEntity<Unit> {
+        return if (authorService.isAdmin(session)) {
             ResponseEntity(authorService.delete(id), HttpStatus.OK)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
@@ -76,9 +83,17 @@ class AuthorController(service: AuthorService) {
             ApiResponse(code = 404, message = "Author not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, author: AuthorRequest, req: HttpServletRequest): ResponseEntity<Author> {
-        return if (authorService.isAdmin(req.session.id)) {
-            ResponseEntity(authorService.update(id, author), HttpStatus.OK)
+    fun update(@PathVariable("id") id: UUID, srcPhoto: String?,
+               bornAt: String, deadAt: String,
+               titleRus: String, descriptionRus: String,
+               titleEng: String, descriptionEng: String,
+               titleGer: String, descriptionGer: String, session: String): ResponseEntity<Author> {
+        return if (authorService.isAdmin(session)) {
+            ResponseEntity(authorService.update(id,
+                    srcPhoto, bornAt, deadAt,
+                    titleRus, descriptionRus,
+                    titleEng, descriptionEng,
+                    titleGer, descriptionGer), HttpStatus.OK)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
 
     }

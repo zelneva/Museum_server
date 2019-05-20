@@ -17,7 +17,7 @@ class ShowpieceLocaleData {
     var id: UUID? = null
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.MERGE))
-    @JoinColumn(name = "showpiece_id", nullable = false)
+    @JoinColumn(name = "showpiece_id", nullable = true)
     var showpiece: Showpiece? = null
 
     var language: String? = null

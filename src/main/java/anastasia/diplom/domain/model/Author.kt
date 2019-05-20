@@ -18,8 +18,8 @@ class Author {
     var id: UUID? = null
 
     @Column(name = "born_at")
-    var bornAt: Date? = null
+    var bornAt: String? = null
 
     @Column(name = "died_at")
-    var diedAt: Date? = null //может быть жив
+    var diedAt: String? = null //может быть жив
 }

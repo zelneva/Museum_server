@@ -5,7 +5,7 @@ import anastasia.diplom.domain.model.User
 import lombok.Data
 
 @Data
-class FavoriteRequest {
-    var user: User? = null
-    var showpiece: Showpiece? = null
-}
+class FavoriteRequest (
+    var userId: String,
+    var showpieceId: String
+)

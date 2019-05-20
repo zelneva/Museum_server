@@ -46,9 +46,9 @@ class ExhibitionController(service: ExhibitionService) {
             ApiResponse(code = 201, message = "Exhibition created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(exhibitionRequest: ExhibitionRequest, req: HttpServletRequest): ResponseEntity<Unit> {
-        return if (exhibitionService.isAdmin(req.session.id)) {
-            ResponseEntity(exhibitionService.create(exhibitionRequest), HttpStatus.CREATED)
+    fun create(title: String, startsAt: String, endsAt: String, museumId: String, session: String): ResponseEntity<Unit> {
+        return if (exhibitionService.isAdmin(session)) {
+            ResponseEntity(exhibitionService.create(ExhibitionRequest(title, startsAt, endsAt, museumId)), HttpStatus.CREATED)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 
@@ -60,8 +60,8 @@ class ExhibitionController(service: ExhibitionService) {
             ApiResponse(code = 200, message = "Exhibition removed successfully"),
             ApiResponse(code = 404, message = "Exhibition not found")
     )
-    fun delete(@PathVariable("id") id: UUID, req: HttpServletRequest): ResponseEntity<Unit> {
-        return if (exhibitionService.isAdmin(req.session.id)) {
+    fun delete(@PathVariable("id") id: UUID, session: String): ResponseEntity<Unit> {
+        return if (exhibitionService.isAdmin(session)) {
             ResponseEntity(exhibitionService.delete(id), HttpStatus.OK)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
@@ -74,9 +74,10 @@ class ExhibitionController(service: ExhibitionService) {
             ApiResponse(code = 404, message = "Exhibition not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun updateExhibition(@PathVariable("id") id: UUID, exhibitionRequest: ExhibitionRequest, req: HttpServletRequest): ResponseEntity<Exhibition> {
-        return if (exhibitionService.isAdmin(req.session.id)) {
-            ResponseEntity(exhibitionService.update(id, exhibitionRequest), HttpStatus.OK)
+    fun updateExhibition(@PathVariable("id") id: UUID, title: String, startsAt: String, endsAt: String, museumId: String,
+                         session: String): ResponseEntity<Exhibition> {
+        return if (exhibitionService.isAdmin(session)) {
+            ResponseEntity(exhibitionService.update(id, ExhibitionRequest(title, startsAt, endsAt, museumId)), HttpStatus.OK)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 
@@ -87,7 +88,7 @@ class ExhibitionController(service: ExhibitionService) {
             ApiResponse(code = 200, message = "Exhibition found"),
             ApiResponse(code = 404, message = "Exhibition not found")
     )
-    fun findExhibitionByMuseumId(@PathVariable("museumId") museumId: String): ResponseEntity<List<Exhibition>>{
+    fun findExhibitionByMuseumId(@PathVariable("museumId") museumId: String): ResponseEntity<List<Exhibition>> {
         return ResponseEntity(exhibitionService.findExhibitionsByMuseumId(museumId), HttpStatus.OK)
     }
 

@@ -6,6 +6,7 @@ import anastasia.diplom.domain.vo.AuthorRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.text.SimpleDateFormat
 import java.util.*
 
 @Service
@@ -14,28 +15,42 @@ open class AuthorService: AbstractService {
 
     companion object {
         lateinit var authorRepository: AuthorRepository
+        lateinit var authorLocaleDataService: AuthorLocaleDataService
     }
 
     @Autowired
-    constructor(repository: AuthorRepository,userServ: UserService): super(userServ){
+    constructor(repository: AuthorRepository, authorLD: AuthorLocaleDataService, userServ: UserService): super(userServ){
         authorRepository = repository
+        authorLocaleDataService = authorLD
     }
 
 
     @Transactional
-    open fun create(request: AuthorRequest){
+    open fun create(srcPhoto: String?, born: String, dead: String,
+                    titleRus: String, descriptionRus: String,
+                    titleEng: String, descriptionEng: String,
+                    titleGer: String, descriptionGer: String){
         val author = Author()
-        author.bornAt = request.bornAt
-        author.diedAt = request.diedAt
+        author.bornAt = born
+        author.diedAt = dead
+        authorLocaleDataService.create("ru", titleRus, descriptionRus, author)
+        authorLocaleDataService.create("en", titleEng, descriptionEng, author)
+        authorLocaleDataService.create("ge", titleGer, descriptionGer, author)
         authorRepository.save(author)
     }
 
 
     @Transactional
-    open fun update(id: UUID, request: AuthorRequest): Author{
+    open fun update(id: UUID, srcPhoto: String?, born: String, dead: String,
+                    titleRus: String, descriptionRus: String,
+                    titleEng: String, descriptionEng: String,
+                    titleGer: String, descriptionGer: String): Author{
         val author = authorRepository.findOne(id)
-        author.bornAt = request.bornAt ?: author.bornAt
-        author.diedAt = request.diedAt ?: author.diedAt
+        author.bornAt = born
+        author.diedAt = dead
+        authorLocaleDataService.create("ru", titleRus, descriptionRus, author)
+        authorLocaleDataService.create("en", titleEng, descriptionEng, author)
+        authorLocaleDataService.create("ge", titleGer, descriptionGer, author)
         return authorRepository.save(author)
     }
 
@@ -46,8 +61,8 @@ open class AuthorService: AbstractService {
     }
 
 
-    fun findOne(id: UUID) = authorRepository.findOne(id)
+    fun findOne(id: UUID) = authorRepository.findOne(id)!!
 
 
-    fun findAll() = authorRepository.findAll()
+    fun findAll() = authorRepository.findAll()!!
 }

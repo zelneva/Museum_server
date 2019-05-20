@@ -4,7 +4,7 @@ import lombok.Data
 import java.util.*
 
 @Data
-class AuthorRequest {
-    var bornAt: Date? = null
-    var diedAt: Date? = null
-}
+class AuthorRequest(
+        var bornAt: String?,
+        var diedAt: String?
+)

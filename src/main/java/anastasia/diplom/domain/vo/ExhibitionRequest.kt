@@ -5,9 +5,9 @@ import lombok.Data
 import java.util.*
 
 @Data
-class ExhibitionRequest {
-    var name: String? = null
-    var startsAt: Date? = null
-    var endsAt: Date? = null
-    var museum: Museum? = null
-}
+class ExhibitionRequest (
+    var name: String,
+    var startsAt: String,
+    var endsAt: String,
+    var museumId: String
+)

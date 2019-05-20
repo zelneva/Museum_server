@@ -1,5 +1,6 @@
 package anastasia.diplom.domain.service
 
+import anastasia.diplom.domain.model.Author
 import anastasia.diplom.domain.model.AuthorLocaleData
 import anastasia.diplom.domain.repository.AuthorLocaleDataRepository
 import anastasia.diplom.domain.vo.AuthorLocaleDataRequest
@@ -18,29 +19,29 @@ open class AuthorLocaleDataService : AbstractService {
     }
 
     @Autowired
-    constructor(repository: AuthorLocaleDataRepository, userService: UserService) : super(userService) {
+    constructor(repository: AuthorLocaleDataRepository,userService: UserService) : super(userService) {
         authorLocaleDataRepository = repository
     }
 
 
     @Transactional
-    open fun create(authorLocaleDataRequest: AuthorLocaleDataRequest) {
+    open fun create(language: String, name: String, description: String, author: Author) {
         val authorLocaleData = AuthorLocaleData()
-        authorLocaleData.name = authorLocaleDataRequest.name
-        authorLocaleData.description = authorLocaleDataRequest.description
-        authorLocaleData.language = authorLocaleDataRequest.language
-        authorLocaleData.author = authorLocaleDataRequest.author
+        authorLocaleData.name = name
+        authorLocaleData.description = description
+        authorLocaleData.language = language
+        authorLocaleData.author = author
         authorLocaleDataRepository.saveAndFlush(authorLocaleData)
     }
 
 
     @Transactional
-    open fun update(id: UUID, authorLocaleDataRequest: AuthorLocaleDataRequest): AuthorLocaleData {
+    open fun update(id: UUID, language: String, name: String?, description: String?, author: Author?): AuthorLocaleData {
         var authorLocaleData = authorLocaleDataRepository.findOne(id)
-        authorLocaleData.name = authorLocaleDataRequest.name ?: authorLocaleData.name
-        authorLocaleData.author = authorLocaleDataRequest.author ?: authorLocaleData.author
-        authorLocaleData.description = authorLocaleDataRequest.description ?: authorLocaleData.description
-        authorLocaleData.language = authorLocaleDataRequest.language ?: authorLocaleData.description
+        authorLocaleData.name = name  ?: authorLocaleData.name
+        authorLocaleData.author = author ?: authorLocaleData.author
+        authorLocaleData.description = description ?: authorLocaleData.description
+        authorLocaleData.language = language
         return authorLocaleDataRepository.save(authorLocaleData)
     }
 
@@ -58,5 +59,7 @@ open class AuthorLocaleDataService : AbstractService {
 
     //return list all of data about author by id
     fun findDataById(authorId: UUID) = authorLocaleDataRepository.findByAuthorId(authorId)
+
+    fun findByName(name: String) = authorLocaleDataRepository.findAll().filter { it.name == name }.get(0)
 
 }

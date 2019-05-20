@@ -1,10 +1,11 @@
 package anastasia.diplom.domain.vo
 
-import anastasia.diplom.domain.model.Author
+import lombok.Data
 
-class AuthorLocaleDataRequest {
-    var name: String? = null
-    var language: String? = null
-    var description: String? = null
-    var author: Author? = null
-}
+@Data
+class AuthorLocaleDataRequest(
+    var name: String,
+    var language: String,
+    var description: String,
+    var authorId: String?
+)
