@@ -22,4 +22,6 @@ class Museum {
     var name: String? = null
 
     var address: String? = null
+
+    var photoSrc: String? = null
 }

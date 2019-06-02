@@ -17,7 +17,7 @@ class AuthorLocaleData {
     var id: UUID? = null
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = arrayOf(CascadeType.MERGE))
-    @JoinColumn(name = "author_id", nullable = false)
+    @JoinColumn(name = "author_id",nullable = true)
     var author: Author? = null
 
     var language: String? = null

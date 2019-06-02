@@ -28,7 +28,7 @@ class ExhibitionController(service: ExhibitionService) {
             ApiResponse(code = 200, message = "Exhibition found"),
             ApiResponse(code = 404, message = "Exhibition not found")
     )
-    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(exhibitionService.findOne(id))
+    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(exhibitionService.findOne(id)!!)
 
 
     @GetMapping

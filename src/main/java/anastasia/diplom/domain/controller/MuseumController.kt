@@ -29,7 +29,7 @@ class MuseumController(service: MuseumService) {
             ApiResponse(code = 200, message = "Museum found"),
             ApiResponse(code = 404, message = "Museum not found")
     )
-    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(museumService.findOne(id))
+    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(museumService.findOne(id)!!)
 
 
     @GetMapping
@@ -52,9 +52,9 @@ class MuseumController(service: MuseumService) {
             ApiResponse(code = 201, message = "Museum created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(@RequestParam name: String, @RequestParam address: String, @RequestParam session: String): ResponseEntity<Unit> {
+    fun create(@RequestParam photoSrc: String, @RequestParam name: String, @RequestParam address: String, @RequestParam session: String): ResponseEntity<Unit> {
         return if (museumService.isAdmin(session)) {
-            ResponseEntity(museumService.create(MuseumRequest(name, address)), HttpStatus.CREATED)
+            ResponseEntity(museumService.create(MuseumRequest(name, address, photoSrc)), HttpStatus.CREATED)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 
@@ -80,9 +80,9 @@ class MuseumController(service: MuseumService) {
             ApiResponse(code = 404, message = "Museum not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, @RequestParam name: String, @RequestParam address: String, @RequestParam session: String): ResponseEntity<Museum> {
+    fun update(@PathVariable("id") id: UUID, @RequestParam photoSrc: String, @RequestParam name: String, @RequestParam address: String, @RequestParam session: String): ResponseEntity<Museum> {
         return if (museumService.isAdmin(session)) {
-            ResponseEntity(museumService.update(id, MuseumRequest(name, address)), HttpStatus.OK)
+            ResponseEntity(museumService.update(id, MuseumRequest(name, address, photoSrc)), HttpStatus.OK)
         } else ResponseEntity(HttpStatus.BAD_REQUEST)
     }
 

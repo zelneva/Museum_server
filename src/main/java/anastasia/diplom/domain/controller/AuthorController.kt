@@ -30,7 +30,7 @@ class AuthorController(service: AuthorService) {
             ApiResponse(code = 200, message = "Author found"),
             ApiResponse(code = 404, message = "Author not found")
     )
-    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(authorService.findOne(id))
+    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(authorService.findOne(id)!!)
 
 
     @GetMapping
@@ -48,12 +48,12 @@ class AuthorController(service: AuthorService) {
             ApiResponse(code = 201, message = "Author created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(srcPhoto: String?, bornAt: String, deadAt: String,
+    fun create(photoSrc: String?, bornAt: String, deadAt: String,
                titleRus: String, descriptionRus: String,
                titleEng: String, descriptionEng: String,
                titleGer: String, descriptionGer: String, session: String): ResponseEntity<Unit> {
         return if (authorService.isAdmin(session)) {
-            ResponseEntity(authorService.create(srcPhoto,
+            ResponseEntity(authorService.create(photoSrc,
                     bornAt, deadAt,
                     titleRus, descriptionRus,
                     titleEng, descriptionEng,
@@ -83,14 +83,14 @@ class AuthorController(service: AuthorService) {
             ApiResponse(code = 404, message = "Author not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, srcPhoto: String?,
+    fun update(@PathVariable("id") id: UUID, photoSrc: String?,
                bornAt: String, deadAt: String,
                titleRus: String, descriptionRus: String,
                titleEng: String, descriptionEng: String,
                titleGer: String, descriptionGer: String, session: String): ResponseEntity<Author> {
         return if (authorService.isAdmin(session)) {
             ResponseEntity(authorService.update(id,
-                    srcPhoto, bornAt, deadAt,
+                    photoSrc, bornAt, deadAt,
                     titleRus, descriptionRus,
                     titleEng, descriptionEng,
                     titleGer, descriptionGer), HttpStatus.OK)

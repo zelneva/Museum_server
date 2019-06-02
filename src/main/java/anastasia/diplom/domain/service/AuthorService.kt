@@ -33,6 +33,7 @@ open class AuthorService: AbstractService {
         val author = Author()
         author.bornAt = born
         author.diedAt = dead
+        author.photoSrc = srcPhoto
         authorLocaleDataService.create("ru", titleRus, descriptionRus, author)
         authorLocaleDataService.create("en", titleEng, descriptionEng, author)
         authorLocaleDataService.create("ge", titleGer, descriptionGer, author)

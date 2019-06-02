@@ -1,4 +1,6 @@
 spring:
+  multipart:
+    enabled: true
   datasource:
     url: jdbc:postgresql://localhost:5432/museum
     username: anastasia

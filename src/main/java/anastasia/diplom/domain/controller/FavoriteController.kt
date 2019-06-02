@@ -1,5 +1,6 @@
 package anastasia.diplom.domain.controller
 
+import anastasia.diplom.domain.model.Favorite
 import anastasia.diplom.domain.service.FavoriteService
 import anastasia.diplom.domain.vo.CommentRequest
 import anastasia.diplom.domain.vo.FavoriteRequest
@@ -31,9 +32,10 @@ class FavoriteController(service: FavoriteService) {
             ApiResponse(code = 400, message = "Invalid request")
     )
     fun create(@RequestParam(value = "showpiece", required = false) showpieceId: String,
-               @RequestParam(value = "session", required = false) sessionId: String): ResponseEntity<Unit> {
+               @RequestParam(value = "session", required = false) sessionId: String): ResponseEntity<Favorite> {
         if (favoriteService.isUserLogin(sessionId)) {
-            return ResponseEntity(favoriteService.create(showpieceId, sessionId), HttpStatus.CREATED)
+            return ResponseEntity(favoriteService.create(showpieceId, sessionId)!!, HttpStatus.CREATED)
+
         } else
             return ResponseEntity(HttpStatus.BAD_REQUEST)
     }

@@ -43,12 +43,11 @@ open class UserService {
 
 
     @Transactional
-    open fun update(id: UUID, userRequest: UserRequest): User {
+    open fun update(id: UUID, name: String, username: String, password: String): User {
         val user = userRepository.findOne(id)
-        user.username = userRequest.username ?: user.username
-        user.name = userRequest.name ?: user.name
-        user.password = generatePassword(userRequest.password!!) ?: user.password
-        user.srcPhoto = userRequest.srcPhoto ?: user.srcPhoto
+        user.username = username
+        user.name = name
+        user.password = password
         return userRepository.save(user)
     }
 
@@ -90,5 +89,7 @@ open class UserService {
     fun checkUserInRedis(sessionId: String)= redisTemplate.opsForValue().get(sessionId) != null
 
     fun getUserIdFromSessionId(sessionId: String) = redisTemplate.opsForValue().get(sessionId)
+
+
 
 }

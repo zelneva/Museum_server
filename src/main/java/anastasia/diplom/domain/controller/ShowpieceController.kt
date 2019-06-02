@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import java.util.*
 
 
@@ -47,7 +48,7 @@ class ShowpieceController(service: ShowpieceService) {
             ApiResponse(code = 201, message = "Showpiece created successfully"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun create(srcPhoto: String?, year: String, authorName: String,
+    fun create(srcPhoto: String, year: String, authorName: String,
                titleRus: String, descriptionRus: String,
                titleEng: String, descriptionEng: String,
                titleGer: String, descriptionGer: String, session: String): ResponseEntity<Unit> {

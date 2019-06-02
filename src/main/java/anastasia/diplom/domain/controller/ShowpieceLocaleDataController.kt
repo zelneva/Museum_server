@@ -29,7 +29,7 @@ class ShowpieceLocaleDataController( service: ShowpieceLocaleDataService) {
             ApiResponse(code = 200, message = "Showpiece local data found"),
             ApiResponse(code = 404, message = "Showpiece local data not found")
     )
-    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(showpieceLocaleDataService.findOne(id))
+    fun findOne(@PathVariable("id") id: UUID) = ResponseEntity.ok(showpieceLocaleDataService.findOne(id)!!)
 
 
     @GetMapping

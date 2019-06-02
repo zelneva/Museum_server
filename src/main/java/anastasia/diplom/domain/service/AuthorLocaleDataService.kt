@@ -31,7 +31,7 @@ open class AuthorLocaleDataService : AbstractService {
         authorLocaleData.description = description
         authorLocaleData.language = language
         authorLocaleData.author = author
-        authorLocaleDataRepository.saveAndFlush(authorLocaleData)
+        authorLocaleDataRepository.save(authorLocaleData)
     }
 
 

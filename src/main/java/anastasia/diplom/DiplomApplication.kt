@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 @EnableAutoConfiguration
 open class DiplomApplication {
 
+
     companion object {
         @JvmStatic
         fun main(args: Array<String>) {
@@ -15,4 +16,7 @@ open class DiplomApplication {
         }
     }
 }
+
+
+
 

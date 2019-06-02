@@ -26,6 +26,7 @@ open class MuseumService : AbstractService {
     @Transactional
     open fun create(request: MuseumRequest) {
         var museum = Museum()
+        museum.photoSrc = request.photoSrc
         museum.name = request.name
         museum.address = request.address
         museumRepository.save(museum)
@@ -35,6 +36,7 @@ open class MuseumService : AbstractService {
     @Transactional
     open fun update(id: UUID, museumRequest: MuseumRequest): Museum {
         val museum = museumRepository.findOne(id)
+        museum.photoSrc = museumRequest.photoSrc?: museum.photoSrc
         museum.name = museumRequest.name ?: museum.name
         museum.address = museumRequest.address ?: museum.address
         return museumRepository.save(museum)

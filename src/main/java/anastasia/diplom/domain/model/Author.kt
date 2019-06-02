@@ -22,4 +22,7 @@ class Author {
 
     @Column(name = "died_at")
     var diedAt: String? = null //может быть жив
+
+    @Column(name = "photo_src", nullable = true)
+    var photoSrc: String? = null
 }

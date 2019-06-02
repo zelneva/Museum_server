@@ -34,25 +34,21 @@ open class FavoriteService {
 
 
     @Transactional
-    open fun create(showpieceId: String, session: String) {
+    open fun create(showpieceId: String, session: String): Favorite? {
         if (redisTemplate.opsForValue().get(session) != null) {
             val favorite = Favorite()
             favorite.showpiece = showpieceRepository.findOne(UUID.fromString(showpieceId))
             val userId = redisTemplate.opsForValue().get(session)
             favorite.user = userRepository.findOne(UUID.fromString(userId))
-            favoriteRepository.save(favorite)
+            return favoriteRepository.save(favorite)
         }
+        return null
     }
 
 
     @Transactional
     open fun delete(id: UUID, session: String) {
-        if (redisTemplate.opsForValue().get(session) != null) {
-            val userId = redisTemplate.opsForValue().get(session)
-            if (favoriteRepository.findOne(id).user == userRepository.findOne(UUID.fromString(userId))) {
-                favoriteRepository.delete(id)
-            }
-        }
+        favoriteRepository.delete(favoriteRepository.findOne(id))
     }
 
 
