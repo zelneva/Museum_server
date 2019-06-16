@@ -25,7 +25,9 @@ class Comment {
     @JoinColumn(name = "showpiece_id", nullable = false)
     var showpiece: Showpiece? = null
 
+    @Column(name = "text")
     var text: String? = null
 
+    @Column(name = "date")
     var date: Date? = null
 }

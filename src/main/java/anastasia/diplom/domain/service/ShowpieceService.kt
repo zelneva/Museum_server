@@ -89,12 +89,12 @@ open class ShowpieceService : AbstractService {
 
 
     fun getShowpieceByExhibitionId(exhibitionId: String): List<Showpiece> {
-        return findAll().filter { showpiece -> showpiece.exhibition!!.id.toString() == exhibitionId }
+        return findAll().filter { it.exhibition?.id.toString() == exhibitionId }
     }
 
 
     fun getShowpieceByAuthor(authorId: String): List<Showpiece> {
-        return findAll().filter { showpiece -> showpiece.author!!.id.toString() == authorId }
+        return findAll().filter { showpiece -> showpiece.author?.id.toString() == authorId }
     }
 
 

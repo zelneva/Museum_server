@@ -5,10 +5,7 @@ import org.hibernate.annotations.GenericGenerator
 import org.mindrot.jbcrypt.BCrypt
 
 import java.util.UUID
-import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Data
 @Entity
@@ -26,7 +23,7 @@ class User {
 
     var password: String? = null
 
-    var role: String? = null// visitor | admin
+    var role: String? = null
 
     var srcPhoto: String? = null
 

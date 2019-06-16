@@ -35,7 +35,7 @@ open class UserService {
         user.password = generatePassword(password).trim()
         user.role = "visitor"
         user.username = username.trim()
-        user.srcPhoto = ""
+        user.srcPhoto = null
         userRepository.save(user)
         return user
     }

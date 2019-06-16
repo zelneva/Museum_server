@@ -103,8 +103,12 @@ open class UserController(service: UserService) {
             ApiResponse(code = 404, message = "User not found"),
             ApiResponse(code = 400, message = "Invalid request")
     )
-    fun update(@PathVariable("id") id: UUID, name: String, username: String, password: String, session: String)
-            = ResponseEntity(userService.update(id, name, username, password), HttpStatus.OK)
+    fun update(@PathVariable("id") id: UUID,
+               @RequestParam(value = "name", required = false) name: String?,
+               @RequestParam(value = "username", required = false) username: String?,
+               @RequestParam(value = "password", required = false) password: String?,
+               @RequestParam(value = "session", required = false) session: String?)
+            = ResponseEntity(userService.update(id, name!!, username!!, password!!), HttpStatus.OK)
 
 
     @GetMapping("/{id}")
